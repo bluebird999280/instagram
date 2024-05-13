@@ -1,3 +1,5 @@
+import { validateToken } from "../utils/jwt.mjs";
+
 /*
  * 토큰 확인 api
  * @param jwt jwt [Type] String
@@ -10,40 +12,24 @@
  *  4). The Password is empty
  */
 export default async function (req, res, next) {
-	const accessToken = req.headers["Authentication"];
+	const accessToken = req.headers["authentication"].split("Bearer ")[1];
 
 	if (accessToken === undefined) {
-		res.status(401).send({
+		res.send({
+			status: 401,
 			message: "AccessToken is required",
 		});
 		return;
 	}
 
 	try {
-		const decodedAccessToken = await validateToken(accessToken);
-
-		if (decodedAccessToken === null) {
-			if (refreshToken === undefined) {
-				return res.status(401).send({
-					message: "RefreshToken is required",
-				});
-			}
-
-			const decodedRefreshToken = await validateToken(refreshToken);
-			const newAccessToken = generateToken(decodedAccessToken);
-			if (decodedRefreshToken === null) {
-				return res.status(401).send({
-					message: "RefreshToken has expired",
-				});
-			}
-
-			return res.send({ accessToken: newAccessToken });
-		} else {
-			next();
-		}
+		await validateToken(accessToken);
+		next();
 	} catch (error) {
-		return res.status(500).send({
-			error,
+		console.log(error);
+		return res.send({
+			status: 401,
+			message: "AccessToken is invalid",
 		});
 	}
 }
