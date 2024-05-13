@@ -36,7 +36,7 @@ export const authApi = createApi({
 		}),
 		check: builder.query<resultType, undefined>({
 			query: () => ({
-				url: "/check",
+				url: "/user/check",
 				method: "POST",
 				data: {
 					accessToken: localStorage.getItem("accessToken"),
