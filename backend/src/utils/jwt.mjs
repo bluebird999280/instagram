@@ -5,7 +5,7 @@ import path from "path";
 const { sign, verify } = jwt;
 
 export function generateToken(payload = null) {
-	const expiresIn = payload === null ? "1m" : "1s";
+	const expiresIn = payload === null ? "1d" : "1h";
 	const privateKey = fs.readFileSync(
 		path.join(process.cwd(), "/private.key")
 	);
@@ -34,7 +34,8 @@ export function validateToken(token) {
 
 	return new Promise((resolve, reject) => {
 		verify(token, publicKey, verifyOptions, (error, decodedToken) => {
-			if (error.name === "TokenExpiredError") return resolve(null);
+			if (error !== null && error.name === "TokenExpiredError")
+				return resolve(null);
 			if (error) return reject(error);
 			resolve(decodedToken);
 		});

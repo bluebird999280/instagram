@@ -10,42 +10,40 @@
  *  4). The Password is empty
  */
 export default async function (req, res, next) {
-	const accessToken = req.header;
+	const accessToken = req.headers["Authentication"];
 
-	console.log(req.headers["Authentication"]);
+	if (accessToken === undefined) {
+		res.status(401).send({
+			message: "AccessToken is required",
+		});
+		return;
+	}
 
-	// if (accessToken === undefined) {
-	// 	res.status(401).send({
-	// 		message: "AccessToken is required",
-	// 	});
-	// 	return;
-	// }
+	try {
+		const decodedAccessToken = await validateToken(accessToken);
 
-	// try {
-	// 	const decodedAccessToken = await validateToken(accessToken);
+		if (decodedAccessToken === null) {
+			if (refreshToken === undefined) {
+				return res.status(401).send({
+					message: "RefreshToken is required",
+				});
+			}
 
-	// 	if (decodedAccessToken === null) {
-	// 		if (refreshToken === undefined) {
-	// 			return res.status(401).send({
-	// 				message: "RefreshToken is required",
-	// 			});
-	// 		}
+			const decodedRefreshToken = await validateToken(refreshToken);
+			const newAccessToken = generateToken(decodedAccessToken);
+			if (decodedRefreshToken === null) {
+				return res.status(401).send({
+					message: "RefreshToken has expired",
+				});
+			}
 
-	// 		const decodedRefreshToken = await validateToken(refreshToken);
-	// 		const newAccessToken = generateToken(decodedAccessToken);
-	// 		if (decodedRefreshToken === null) {
-	// 			return res.status(401).send({
-	// 				message: "RefreshToken has expired",
-	// 			});
-	// 		}
-
-	// 		return res.send({ accessToken: newAccessToken });
-	// 	} else {
-	// 		next();
-	// 	}
-	// } catch (error) {
-	// 	return res.status(500).send({
-	// 		error,
-	// 	});
-	// }
+			return res.send({ accessToken: newAccessToken });
+		} else {
+			next();
+		}
+	} catch (error) {
+		return res.status(500).send({
+			error,
+		});
+	}
 }
