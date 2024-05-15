@@ -3,7 +3,7 @@ import EnterContentComponent from "@/components/modal/createPost/EnterContent";
 import getPreviewFromFile from "@/utils/getPreviewFromFile";
 
 interface IEnterContentContainer {
-	imageFileList: FileList | null;
+	imageFileList: FileList | undefined;
 	content: string;
 	setContent: (content: string) => void;
 }
@@ -18,7 +18,7 @@ function EnterContentContainer({
 	useEffect(() => {
 		const arr: string[] = [];
 
-		if (imageFileList !== null) {
+		if (imageFileList !== undefined) {
 			for (const imageFile of imageFileList) {
 				getPreviewFromFile(imageFile)?.then((result) => {
 					arr.push(result);

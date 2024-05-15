@@ -1,8 +1,7 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
-import Modal from "@/containers/common/modal/Modal";
+import Modal from "@/containers/modal/Modal";
 import AuthPage from "@/pages/Auth";
 import HomePage from "@/pages/Home";
 import ExplorePage from "@/pages/Explore";
@@ -40,10 +39,8 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-	<React.StrictMode>
-		<Provider store={store}>
-			<Modal />
-			<RouterProvider router={router} />
-		</Provider>
-	</React.StrictMode>
+	<Provider store={store}>
+		<Modal />
+		<RouterProvider router={router} />
+	</Provider>
 );

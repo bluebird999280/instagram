@@ -2,6 +2,7 @@ import { useMemo, useState, useCallback } from "react";
 import Layout from "@/components/modal/createPost/Layout";
 import SelectImage from "@/containers/modal/createPost/SelectImage";
 import EnterContent from "@/containers/modal/createPost/EnterContent";
+import Upload from "@/containers/modal/createPost/Upload";
 
 function CreatePost() {
 	const [content, setContent] = useState("");
@@ -17,30 +18,8 @@ function CreatePost() {
 	}, []);
 
 	const EnterContentNextOnClick = useCallback(async () => {
-		const sendData = new FormData();
-
-		if (imageFileList !== undefined) {
-			sendData.append("text", content);
-			for (let i = 0; i < imageFileList.length; i++) {
-				sendData.append("images", imageFileList[i]);
-				console.log(i);
-			}
-		}
-
-		try {
-			await fetch("http://localhost:4000/api/feed/upload", {
-				method: "POST",
-				cache: "no-cache",
-				body: sendData,
-				headers: {
-					Authentication:
-						"Bearer " + localStorage.getItem("accessToken"),
-				},
-			});
-		} catch (e) {
-			console.log(e);
-		}
-	}, [imageFileList, content]);
+		setModalIndex(2);
+	}, []);
 
 	const layouts = useMemo(
 		() => [
@@ -70,6 +49,15 @@ function CreatePost() {
 				}
 				prevOnClick={EnterContentPrevOnClick}
 				nextOnClick={EnterContentNextOnClick}
+			/>,
+			<Layout
+				width={"1040px"}
+				height={"743px"}
+				first
+				title="게시물 공유하기"
+				body={
+					<Upload content={content} imageFileList={imageFileList} />
+				}
 			/>,
 		],
 		[

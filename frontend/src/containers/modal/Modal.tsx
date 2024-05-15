@@ -6,9 +6,7 @@ import CreatePost from "@/containers/modal/createPost/CreatePost";
 
 function ModalContainer() {
 	const dispatch = useAppDispatch();
-	const { modal } = useAppSelector((state) => ({
-		modal: state.view.modal,
-	}));
+	const modal = useAppSelector((state) => state.view.modal);
 
 	const exitModal = useCallback(() => {
 		dispatch(setModal(null));

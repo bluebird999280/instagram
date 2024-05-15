@@ -47,9 +47,12 @@ function ImageSlideComponent({ width, height, images }: IImageSlideComponent) {
 				ref={sliderRef}
 			>
 				{images.map((image: string) => (
-					<div className="w-full h-full flex-shrink-0 overflow-hidden">
+					<div
+						key={image}
+						className="w-full h-full flex-shrink-0 overflow-hidden"
+					>
 						<img
-							src={image}
+							src={`http://localhost:4000/images/${image}`}
 							className="object-cover w-full h-full"
 						/>
 					</div>

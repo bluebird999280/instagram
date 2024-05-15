@@ -8,9 +8,7 @@ function MainMenuContainer() {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
-	const { slideMenu } = useAppSelector((state) => ({
-		slideMenu: state.view.slideMenu,
-	}));
+	const slideMenu = useAppSelector((state) => state.view.slideMenu);
 	const [currentClickedButton, setCurrentClickedButton] = useState("home");
 	const extendMenu = useMemo(() => slideMenu === null, [slideMenu]);
 

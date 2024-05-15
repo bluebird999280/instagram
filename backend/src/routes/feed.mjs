@@ -3,8 +3,49 @@ import multer from "multer";
 import FeedSchema from "../models/feed.mjs";
 import mongoose from "mongoose";
 import checkMiddleware from "../middlewares/check.mjs";
+import feedSchema from "../models/feed.mjs";
 
 const router = express.Router();
+
+/*
+ * 전체 피드 가져오기 API (GET)
+ * @param max max [Type] Number
+ * data
+ * status : 200(성공), 401(실패)
+ * message : 401
+ *  1). File or text is empty.
+ *  2). Uploading to database is fail.
+ */
+router.get("/", async (req, res) => {
+	const feedModel = mongoose.model("feed", feedSchema);
+
+	try {
+		const feeds = await feedModel
+			.find()
+			.sort({ good: -1 })
+			.skip(req.query.count * req.query.max)
+			.limit(req.query.max);
+
+		if (feeds.length === 0) {
+			return res.statusCode(401).send({ message: "There is no feeds" });
+		}
+
+		return res.send({ feeds });
+	} catch (e) {
+		return res.statusCode(500).send({ message: "db error" });
+	}
+});
+
+/*
+ * feed 업로드 api
+ * @param text text [Type] String
+ * @param imageList imageList [Type] FileList
+ * data
+ * status : 200(성공), 401(실패)
+ * message : 401
+ *  1). File or text is empty.
+ *  2). Uploading to database is fail.
+ */
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -21,16 +62,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-/*
- * feed 업로드 api
- * @param text text [Type] String
- * @param imageList imageList [Type] FileList
- * data
- * status : 200(성공), 401(실패)
- * message : 401
- *  1). File or text is empty.
- *  2). Uploading to database is fail.
- */
 router.post(
 	"/upload",
 	checkMiddleware,

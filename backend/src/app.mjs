@@ -13,6 +13,7 @@ const port = PORT;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static("files"));
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/user", userRouter);
 app.use("/api/feed", feedRouter);

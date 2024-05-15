@@ -17,26 +17,26 @@ type signUpType = {
 export const authApi = createApi({
 	reducerPath: "authApi",
 	baseQuery: axiosBaseQuery({
-		baseUrl: "http://localhost:4000/api",
+		baseUrl: "http://localhost:4000/api/user",
 	}),
 	endpoints: (builder) => ({
 		signIn: builder.query<resultType, signInType>({
 			query: (data) => ({
-				url: "/user/signIn",
+				url: "/signIn",
 				method: "POST",
 				data,
 			}),
 		}),
 		signUp: builder.query<resultType, signUpType>({
 			query: (data) => ({
-				url: "/user/signUp",
+				url: "/signUp",
 				method: "POST",
 				data,
 			}),
 		}),
 		check: builder.query<resultType, undefined>({
 			query: () => ({
-				url: "/user/check",
+				url: "/check",
 				method: "POST",
 				data: {
 					accessToken: localStorage.getItem("accessToken"),

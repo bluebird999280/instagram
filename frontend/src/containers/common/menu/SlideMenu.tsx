@@ -13,9 +13,7 @@ const childBySlideMenu: IChildBySlideMenu = {
 };
 
 function SlideMenuContainer() {
-	const { slideMenu } = useAppSelector((state) => ({
-		slideMenu: state.view.slideMenu,
-	}));
+	const slideMenu = useAppSelector((state) => state.view.slideMenu);
 
 	return (
 		<SlideMenu>

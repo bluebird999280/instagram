@@ -34,8 +34,6 @@ export function validateToken(token) {
 
 	return new Promise((resolve, reject) => {
 		verify(token, publicKey, verifyOptions, (error, decodedToken) => {
-			if (error !== null && error.name === "TokenExpiredError")
-				return resolve(null);
 			if (error) return reject(error);
 			resolve(decodedToken);
 		});
