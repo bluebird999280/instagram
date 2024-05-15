@@ -22,5 +22,5 @@
 2. Express.js
 3. MongoDB
 
-개발 기록
+## 개발 기록
 - <a href="https://psycoma.notion.site/v2-5-42fe277be9c2407ca668d1808548dd32?pvs=4">Notion</a>
