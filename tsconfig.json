@@ -31,6 +31,6 @@
       "@/utils/*" : ["utils/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "svg.d.ts", "node_modules/@svgr/svg.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
