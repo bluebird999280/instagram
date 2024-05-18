@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import ImageSlider from "./ImageSlider";
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
 	title: "Auth/ImageSlider",
 	component: ImageSlider,
@@ -10,7 +9,7 @@ const meta = {
 		docs: {
 			description: {
 				component: `단순한 정적 슬라이드입니다.  
-					 3초 간격으로 투명도가 활성화/비활성화되면서 슬라이드 움직입니다.
+				3초 간격으로 투명도가 활성화/비활성화되면서 슬라이드 움직입니다.
 					`,
 			},
 		},
@@ -25,5 +24,7 @@ type Story = StoryObj<typeof meta>;
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Default: Story = {
-	args: {},
+	args: {
+		opacityIndex: 0,
+	},
 };
