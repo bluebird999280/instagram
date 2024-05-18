@@ -1,11 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { loginThunk } from "./thunk";
-import { IAxiosError } from "@/utils/types/global";
 
 interface IInitialState {
 	loginLoading: boolean;
 	isLogin: boolean;
-	error?: IAxiosError;
+	error?: string;
 }
 
 const initialState: IInitialState = {
