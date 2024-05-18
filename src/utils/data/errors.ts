@@ -10,4 +10,9 @@ const errors: errorsType = {
 	"Database unknown error": "서버에 장애가 발생했습니다.",
 };
 
-export default errors;
+function errorMessage(error?: string) {
+	if (error === undefined) return false;
+	return errors[error];
+}
+
+export default errorMessage;
