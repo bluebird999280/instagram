@@ -1,11 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AsyncThunkPayloadCreator, AsyncThunkOptions } from "@reduxjs/toolkit";
-import { IAxiosError } from "../types/global";
 
 export default function TypedCreateAsyncThunk<
 	ResponseType,
 	ParameterType,
-	ErrorType = IAxiosError,
+	ErrorType = string,
 >(
 	typePrefix: string,
 	payloadCreator: AsyncThunkPayloadCreator<

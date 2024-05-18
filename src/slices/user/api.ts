@@ -1,8 +1,8 @@
 import axiosInstance from "@/utils/axios/index";
-import { ILoginData, ILoginResult } from "@/utils/types/user";
+import { ILoginData } from "@/utils/types/user";
 
 export const loginApi = async (data: ILoginData) => {
-	const result = await axiosInstance<ILoginResult>({
+	const result = await axiosInstance({
 		method: "post",
 		url: "/user/signIn",
 		data,

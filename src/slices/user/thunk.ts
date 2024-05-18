@@ -7,18 +7,15 @@ export const loginThunk = TypedCreateAsyncThunk(
 	"user/loginApi",
 	async (data: ILoginData, thunkAPI) => {
 		try {
-			return await loginApi(data);
+			const result = await loginApi(data);
+			return result;
 		} catch (e: unknown) {
 			if (e instanceof AxiosError) {
-				return thunkAPI.rejectWithValue({
-					status: e.status ?? 500,
-					message: e.response?.data.message ?? "unknown error",
-				});
+				return thunkAPI.rejectWithValue(
+					e.response?.data.message ?? "unknown error"
+				);
 			}
-			return thunkAPI.rejectWithValue({
-				status: 500,
-				message: "unknown error",
-			});
+			return thunkAPI.rejectWithValue("unknown error");
 		}
 	}
 );
