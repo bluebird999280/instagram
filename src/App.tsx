@@ -1,18 +1,29 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
-const router = createBrowserRouter([
-	{
-		path: "/",
-		element: <div>인증 페이지</div>,
-	},
-]);
+import { useEffect } from "react";
+import { useAppSelector } from "./utils/hooks/redux";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import AuthPage from "./pages/Auth";
 
 function App() {
+	const isLogin = useAppSelector((state) => state.user.isLogin);
+	const navigate = useNavigate();
+	const location = useLocation();
+
+	useEffect(() => {
+		if (isLogin && location.pathname === "/") {
+			return navigate("/home");
+		}
+
+		if (!isLogin && location.pathname !== "/") {
+			return navigate("/");
+		}
+	}, [location, navigate, isLogin]);
+
 	return (
-		<>
-			<div className="text-3xl">Hello World</div>
-			<RouterProvider router={router} />
-		</>
+		<Routes>
+			<Route path="/" element={<AuthPage />} />
+			<Route path="/home" element={<div>home</div>} />
+		</Routes>
 	);
 }
 

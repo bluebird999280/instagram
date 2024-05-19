@@ -1,20 +1,17 @@
-import { useCallback, useMemo, useState, useEffect } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/redux";
-import { useNavigate } from "react-router-dom";
 import { loginThunk } from "@/slices/user/thunk";
 import errorMessage from "@/utils/data/errors";
 import LoginFormComponent from "@/components/auth/LoginForm/LoginForm";
 
-function LoginFormContainer() {
-	const navigate = useNavigate();
+interface ILoginFormContainer {
+	registerButtonOnClick: () => void;
+}
+
+function LoginFormContainer({ registerButtonOnClick }: ILoginFormContainer) {
 	const dispatch = useAppDispatch();
 	const error = useAppSelector((state) => state.user.error);
-	const isLogin = useAppSelector((state) => state.user.isLogin);
 	const [inputs, setInputs] = useState({ id: "", password: "" });
-
-	useEffect(() => {
-		if (isLogin) return navigate("/home");
-	}, [isLogin, navigate]);
 
 	const rules = useMemo(
 		() => ({
@@ -47,7 +44,7 @@ function LoginFormContainer() {
 			errorMessage={errorMessage(error)}
 			inputOnChange={inputOnChange}
 			submitOnClick={submitOnClick}
-			registerButtonOnClick={() => {}}
+			registerButtonOnClick={registerButtonOnClick}
 		/>
 	);
 }
