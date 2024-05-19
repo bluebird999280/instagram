@@ -36,7 +36,7 @@ function Input({
 			>
 				<span>{label}</span>
 			</div>
-			<div className="flex justify-center h-full mr-1">
+			<div className="flex justify-center items-center h-full mr-1">
 				<div
 					className={
 						"w-[22px] h-[22px] bg-[url('/src/assets/images/TJztmXpWTmS.png')] " +
