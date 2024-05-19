@@ -19,3 +19,8 @@ export interface IRegisterResponse {
 	accessToken: string;
 	refreshToken: string;
 }
+
+export interface ICheckData {
+	accessToken: string | null;
+	refreshToken: string | null;
+}

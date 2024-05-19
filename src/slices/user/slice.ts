@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { loginThunk, registerThunk } from "./thunk";
+import { checkThunk, loginThunk, registerThunk } from "./thunk";
 
 interface IInitialState {
 	isLogin: boolean;
@@ -67,6 +67,24 @@ export const userSlice = createSlice({
 			.addCase(registerThunk.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
+			})
+			.addCase(checkThunk.pending, (state) => {
+				state.loading = true;
+				state.error = undefined;
+			})
+			.addCase(checkThunk.fulfilled, (state, action) => {
+				state.loading = false;
+				state.isLogin = true;
+
+				localStorage.setItem("accessToken", action.payload.accessToken);
+			})
+			.addCase(checkThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.isLogin = false;
+				state.error = action.payload;
+
+				localStorage.removeItem("accessToken");
+				localStorage.removeItem("refreshToken");
 			}),
 });
 
