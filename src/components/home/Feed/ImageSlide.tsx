@@ -52,7 +52,7 @@ function ImageSlideComponent({ width, height, images }: IImageSlideComponent) {
 						className="flex-shrink-0 w-full h-full overflow-hidden"
 					>
 						<img
-							src={image}
+							src={"http://localhost:4000/images/" + image}
 							className="object-cover w-full h-full"
 						/>
 					</div>
