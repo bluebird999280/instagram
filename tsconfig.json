@@ -31,6 +31,6 @@
       "@/utils/*" : ["utils/*"]
     }
   },
-  "include": ["src", "svg.d.ts", "node_modules/@svgr/svg.d.ts"],
+  "include": ["src", "svg.d.ts", "./node_modules/vite-plugin-svgr/client.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
