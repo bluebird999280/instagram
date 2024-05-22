@@ -4,6 +4,7 @@ import { checkThunk } from "@/slices/user/thunk";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 import AuthPage from "./pages/Auth";
+import HomePage from "./pages/Home";
 import LoadingComponent from "@/components/auth/Loading";
 
 function App() {
@@ -39,7 +40,7 @@ function App() {
 	return (
 		<Routes>
 			<Route path="/" element={<AuthPage />} />
-			<Route path="/home" element={<div>home</div>} />
+			<Route path="/home" element={<HomePage />} />
 		</Routes>
 	);
 }
