@@ -13,3 +13,16 @@ export const getFeedListApi = async (params: IGetFeedListParams) => {
 
 	return result.data;
 };
+
+export const uploadFeedApi = async (data: FormData) => {
+	const result = await axiosInstance({
+		method: "post",
+		url: "/post",
+		headers: {
+			Authorization: "Bearer " + localStorage.getItem("accessToken"),
+		},
+		data,
+	});
+
+	return result.data;
+};
