@@ -2,14 +2,17 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import user from "@/slices/user/slice";
+import view from "@/slices/view/slice";
 
 const rootReducer = combineReducers({
 	user: user,
+	view: view,
 });
 
 const persistConfig = {
 	key: "root",
 	storage,
+	blacklist: ["view"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
