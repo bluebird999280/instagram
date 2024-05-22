@@ -4,9 +4,11 @@ import { useAppDispatch, useAppSelector } from "@/utils/hooks/redux";
 import { getFeedListThunk } from "@/slices/view/thunk";
 
 function FeedListContainer() {
+	const lock = useRef(false);
 	const endOfPageRef = useRef<HTMLDivElement>(null);
 	const [count, setCount] = useState(0);
 	const dispatch = useAppDispatch();
+	const loading = useAppSelector((state) => state.view.loading);
 	const error = useAppSelector((state) => state.view.error);
 	const feedList = useAppSelector((state) => state.view.feedList);
 
@@ -19,9 +21,13 @@ function FeedListContainer() {
 		};
 
 		const observer = new IntersectionObserver((entries) => {
-			if (entries[0].isIntersecting && !error) {
-				dispatch(getFeedListThunk({ max: 2, count }));
-				setCount((_count) => _count + 1);
+			if (entries[0].isIntersecting === false) {
+				lock.current = false;
+			}
+			if (entries[0].isIntersecting && !lock.current) {
+				lock.current = true;
+				if (error !== "There is no feeds")
+					setCount((_count) => _count + 1);
 			}
 		}, config);
 
@@ -34,7 +40,11 @@ function FeedListContainer() {
 				observer.unobserve(element);
 			}
 		};
-	}, [dispatch, count, error]);
+	}, [dispatch, error, loading]);
+
+	useEffect(() => {
+		dispatch(getFeedListThunk({ max: 2, count }));
+	}, [dispatch, count]);
 
 	return (
 		<FeedListComponent feedList={feedList} endOfPageRef={endOfPageRef} />
