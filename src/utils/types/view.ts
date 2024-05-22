@@ -6,7 +6,7 @@ export interface IGetFeedListParams {
 export interface IFeedData {
 	_id: string;
 	author: string;
-	text: string;
+	caption: string;
 	images: string[];
 	good: number;
 	comment: {
@@ -23,4 +23,9 @@ export interface IFeedData {
 		} | null;
 	}[];
 	createDate: string;
+}
+
+export interface IUploadFeedBody {
+	caption: string;
+	files?: FileList;
 }

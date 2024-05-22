@@ -14,7 +14,7 @@ function FeedListComponent({ feedList, endOfPageRef }: IFeedListComponent) {
 					<Feed
 						key={index}
 						author={feed.author}
-						text={feed.text}
+						text={feed.caption}
 						images={feed.images}
 						good={feed.good}
 					/>
