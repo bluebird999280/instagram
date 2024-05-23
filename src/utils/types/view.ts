@@ -8,7 +8,10 @@ export interface IFeedData {
 	author: string;
 	caption: string;
 	images: string[];
-	good: number;
+	good: {
+		count: number;
+		pressLike: boolean;
+	};
 	comment: {
 		author: string;
 		comment: {

@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileImageButton from "@/atoms/button/ProfileImageButton";
 import ProfileImage from "./360035642_812561723859722_2543718457893992700_n.jpg";
 import MoreIcon from "@/assets/images/icons/more.svg";
 import HeartIcon from "@/assets/images/icons/heart.svg";
+import HeartFilledIcon from "@/assets/images/icons/heart_fill.svg?react";
 import MessageIcon from "@/assets/images/icons/message.svg";
 import DirectIcon from "@/assets/images/icons/direct.svg";
 import BookmarkIcon from "@/assets/images/icons/bookmark.svg";
@@ -12,7 +13,10 @@ interface IFeedComponent {
 	author: string;
 	text: string;
 	images: string[];
-	good: number;
+	good: {
+		count: number;
+		pressLike: boolean;
+	};
 }
 
 function Feed({ author, text, images, good }: IFeedComponent) {
@@ -46,7 +50,11 @@ function Feed({ author, text, images, good }: IFeedComponent) {
 				<div className="flex justify-between my-[4px] ml-[-8px]">
 					<div className="flex">
 						<div className="p-[8px] cursor-pointer">
-							<img src={HeartIcon} width={24} height={24} />
+							{good.pressLike ? (
+								<HeartFilledIcon className="w-[24px] h-[24px] text-[rgb(255,48,64)]" />
+							) : (
+								<img src={HeartIcon} width={24} height={24} />
+							)}
 						</div>
 						<div className="p-[8px] cursor-pointer">
 							<img src={MessageIcon} width={24} height={24} />
@@ -63,7 +71,7 @@ function Feed({ author, text, images, good }: IFeedComponent) {
 				</div>
 			</div>
 			<div className="leading-[18px] text-[14px] font-bold ">
-				좋아요 {good}개
+				좋아요 {good.count}개
 			</div>
 			<div className="flex mt-[8px] leading-[14px] text-[14px]">
 				<div className="font-semibold mr-[4px]">{author}</div>
