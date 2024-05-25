@@ -140,6 +140,7 @@ function Feed({
 							height: `${comment.split("\n").length * 20}px`,
 						}}
 						value={comment}
+						placeholder="댓글 입력하기"
 						onChange={commentOnChange}
 						onKeyDown={commentOnKeyDown}
 						className="flex-grow outline-none border-none leading-[18px] resize-none max-h-[100px] min-h-[20px]"
