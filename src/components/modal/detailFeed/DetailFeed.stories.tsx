@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import DetailPost from "./DetailPost";
+import DetailFeed from "./DetailFeed";
 
 const meta = {
-	title: "common/modal/DetailPost",
-	component: DetailPost,
+	title: "common/modal/DetailFeed",
+	component: DetailFeed,
 	parameters: {},
 	tags: ["autodocs"],
 	args: {},
-} satisfies Meta<typeof DetailPost>;
+} satisfies Meta<typeof DetailFeed>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

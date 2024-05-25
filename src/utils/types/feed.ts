@@ -33,3 +33,7 @@ export interface IUploadFeedBody {
 	caption: string;
 	files?: FileList;
 }
+
+export interface IGetFeedParams {
+	id: string;
+}

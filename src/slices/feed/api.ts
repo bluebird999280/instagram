@@ -1,5 +1,5 @@
 import axiosInstance from "@/utils/axios/index";
-import { IGetFeedListParams } from "@/utils/types/view";
+import { IGetFeedListParams, IGetFeedParams } from "@/utils/types/feed";
 
 export const getFeedListApi = async (params: IGetFeedListParams) => {
 	const result = await axiosInstance({
@@ -22,6 +22,18 @@ export const uploadFeedApi = async (data: FormData) => {
 			Authorization: "Bearer " + localStorage.getItem("accessToken"),
 		},
 		data,
+	});
+
+	return result.data;
+};
+
+export const getFeedApi = async (params: IGetFeedParams) => {
+	const result = await axiosInstance({
+		method: "get",
+		url: "/post/" + params.id,
+		headers: {
+			Authorization: "Bearer " + localStorage.getItem("accessToken"),
+		},
 	});
 
 	return result.data;

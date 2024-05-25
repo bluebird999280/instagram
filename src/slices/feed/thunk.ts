@@ -1,6 +1,10 @@
 import TypedCreateAsyncThunk from "@/utils/hooks/TypedCreateAsyncThunk";
-import { getFeedListApi, uploadFeedApi } from "./api";
-import { IGetFeedListParams, IUploadFeedBody } from "@/utils/types/view";
+import { getFeedApi, getFeedListApi, uploadFeedApi } from "./api";
+import {
+	IGetFeedListParams,
+	IUploadFeedBody,
+	IGetFeedParams,
+} from "@/utils/types/feed";
 import { AxiosError } from "axios";
 
 export const getFeedListThunk = TypedCreateAsyncThunk(
@@ -11,11 +15,9 @@ export const getFeedListThunk = TypedCreateAsyncThunk(
 			return result;
 		} catch (e: unknown) {
 			if (e instanceof AxiosError) {
-				return thunkAPI.rejectWithValue(
-					e.response?.data.message ?? "unknown error"
-				);
+				return thunkAPI.rejectWithValue(e.response?.data.message);
 			}
-			return thunkAPI.rejectWithValue("unknown error");
+			return thunkAPI.rejectWithValue("Unknown Error");
 		}
 	}
 );
@@ -37,11 +39,24 @@ export const uploadFeedThunk = TypedCreateAsyncThunk(
 			return result;
 		} catch (e: unknown) {
 			if (e instanceof AxiosError) {
-				return thunkAPI.rejectWithValue(
-					e.response?.data.message ?? "unknown error"
-				);
+				return thunkAPI.rejectWithValue(e.response?.data.message);
 			}
-			return thunkAPI.rejectWithValue("unknown error");
+			return thunkAPI.rejectWithValue("Unknown Error");
+		}
+	}
+);
+
+export const getFeedThunk = TypedCreateAsyncThunk(
+	"feed/getFeedThunk",
+	async (params: IGetFeedParams, thunkAPI) => {
+		try {
+			const result = await getFeedApi(params);
+			return result;
+		} catch (e: unknown) {
+			if (e instanceof AxiosError) {
+				return thunkAPI.rejectWithValue(e.response?.data.message);
+			}
+			return thunkAPI.rejectWithValue("Unknown Error");
 		}
 	}
 );

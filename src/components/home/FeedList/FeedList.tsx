@@ -1,5 +1,5 @@
 import FeedContainer from "@/containers/home/Feed";
-import { IFeedData } from "@/utils/types/view";
+import { IFeedData } from "@/utils/types/feed";
 
 interface IFeedListComponent {
 	feedList: IFeedData[];

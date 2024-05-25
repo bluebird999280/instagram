@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IFeedData } from "@/utils/types/view";
+import { IFeedData } from "@/utils/types/feed";
 import ProfileImageButton from "@/atoms/button/ProfileImageButton";
 import ProfileImage from "@/assets/images/test/profile.jpg";
 import MoreIcon from "@/assets/images/icons/more.svg";
@@ -17,6 +17,7 @@ interface IFeedComponent {
 	comment: string;
 	commentCount: number;
 	likeOnClick: () => void;
+	commentOnClick: () => void;
 	commentOnChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 	commentOnSubmit: (e?: React.FormEvent) => void;
 	commentOnKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
@@ -29,6 +30,7 @@ function Feed({
 	comment,
 	commentCount,
 	likeOnClick,
+	commentOnClick,
 	commentOnChange,
 	commentOnSubmit,
 	commentOnKeyDown,
@@ -76,7 +78,10 @@ function Feed({
 								<img src={HeartIcon} width={24} height={24} />
 							)}
 						</div>
-						<div className="p-[8px] cursor-pointer">
+						<div
+							className="p-[8px] cursor-pointer"
+							onClick={commentOnClick}
+						>
 							<img src={MessageIcon} width={24} height={24} />
 						</div>
 						<div className="p-[8px] cursor-pointer">
@@ -118,7 +123,10 @@ function Feed({
 				</div>
 			</div>
 			{commentCount !== 0 && (
-				<div className="flex mt-[8px] leading-[18px] text-[14px] text-[rgb(115,115,115)] cursor-pointer">
+				<div
+					className="flex mt-[8px] leading-[18px] text-[14px] text-[rgb(115,115,115)] cursor-pointer"
+					onClick={commentOnClick}
+				>
 					<div>댓글 {commentCount}개 모두 보기</div>
 				</div>
 			)}

@@ -3,6 +3,7 @@ import { useAppSelector, useAppDispatch } from "@/utils/hooks/redux";
 import { setModal } from "@/slices/view/slice";
 import Modal from "@/components/modal/Modal";
 import CreatePost from "@/containers/modal/createPost/CreatePost";
+import DetailFeedContainer from "@/containers/modal/DetailFeed";
 
 function ModalContainer() {
 	const dispatch = useAppDispatch();
@@ -16,6 +17,7 @@ function ModalContainer() {
 		return (
 			<Modal exitModal={exitModal}>
 				{modal === "createPost" && <CreatePost />}
+				{modal === "showDetailFeed" && <DetailFeedContainer />}
 			</Modal>
 		);
 	return null;

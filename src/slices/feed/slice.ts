@@ -1,16 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getFeedListThunk, uploadFeedThunk } from "./thunk";
-import { IFeedData } from "@/utils/types/view";
+import { getFeedListThunk, uploadFeedThunk, getFeedThunk } from "./thunk";
+import { IFeedData } from "@/utils/types/feed";
 
 interface IInitialState {
 	loading: boolean;
 	error?: string;
+	feed?: IFeedData;
 	feedList: IFeedData[];
 }
 
 const initialState: IInitialState = {
 	loading: false,
 	error: undefined,
+	feed: undefined,
 	feedList: [],
 };
 
@@ -55,9 +57,20 @@ const feedSlice = createSlice({
 			.addCase(uploadFeedThunk.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
+			})
+			.addCase(getFeedThunk.pending, (state) => {
+				state.loading = true;
+				state.error = undefined;
+				state.feed = undefined;
+			})
+			.addCase(getFeedThunk.fulfilled, (state, action) => {
+				state.loading = false;
+				state.feed = action.payload.feed;
+			})
+			.addCase(getFeedThunk.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload;
 			}),
 });
-
-// export const {  } = feedSlice.actions;
 
 export default feedSlice.reducer;

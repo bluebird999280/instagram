@@ -1,13 +1,17 @@
 import { useState, useCallback } from "react";
+import { useAppDispatch } from "@/utils/hooks/redux";
+import { setModal } from "@/slices/view/slice";
 import axiosInstance from "@/utils/axios/index";
-import { IFeedData } from "@/utils/types/view";
+import type { IFeedData } from "@/utils/types/feed";
 import FeedComponent from "@/components/home/Feed/Feed";
+import { getFeedThunk } from "@/slices/feed/thunk";
 
 interface IFeedContainer {
 	feed: IFeedData;
 }
 
 function FeedContainer({ feed }: IFeedContainer) {
+	const dispatch = useAppDispatch();
 	const [like, setLike] = useState(feed.good.pressLike);
 	const [likeCount, setLikeCount] = useState(feed.good.count);
 	const [comment, setComment] = useState("");
@@ -33,6 +37,11 @@ function FeedContainer({ feed }: IFeedContainer) {
 			console.log(e);
 		}
 	}, [feed]);
+
+	const commentOnClick = useCallback(() => {
+		dispatch(getFeedThunk({ id: feed._id }));
+		dispatch(setModal("showDetailFeed"));
+	}, [dispatch, feed]);
 
 	const commentOnChange = useCallback(
 		(e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -88,6 +97,7 @@ function FeedContainer({ feed }: IFeedContainer) {
 			comment={comment}
 			commentCount={commentCount}
 			likeOnClick={likeOnClick}
+			commentOnClick={commentOnClick}
 			commentOnChange={commentOnChange}
 			commentOnSubmit={commentOnSubmit}
 			commentOnKeyDown={commentOnKeyDown}
