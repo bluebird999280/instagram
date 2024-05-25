@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from "react";
+import { useState } from "react";
+import { IFeedData } from "@/utils/types/view";
 import ProfileImageButton from "@/atoms/button/ProfileImageButton";
 import ProfileImage from "@/assets/images/test/profile.jpg";
 import MoreIcon from "@/assets/images/icons/more.svg";
@@ -8,93 +9,31 @@ import MessageIcon from "@/assets/images/icons/message.svg";
 import DirectIcon from "@/assets/images/icons/direct.svg";
 import BookmarkIcon from "@/assets/images/icons/bookmark.svg";
 import ImageSlideComponent from "./ImageSlide";
-import axiosInstance from "@/utils/axios/index";
 
 interface IFeedComponent {
-	id: string;
-	author: string;
-	text: string;
-	images: string[];
-	commentNum: number;
-	good: {
-		count: number;
-		pressLike: boolean;
-	};
+	feed: IFeedData;
+	like: boolean;
+	likeCount: number;
+	comment: string;
+	commentCount: number;
+	likeOnClick: () => void;
+	commentOnChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+	commentOnSubmit: (e?: React.FormEvent) => void;
+	commentOnKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
 }
 
-function Feed({ id, author, text, images, commentNum, good }: IFeedComponent) {
+function Feed({
+	feed,
+	like,
+	likeCount,
+	comment,
+	commentCount,
+	likeOnClick,
+	commentOnChange,
+	commentOnSubmit,
+	commentOnKeyDown,
+}: IFeedComponent) {
 	const [more, setMore] = useState(false);
-	const [like, setLike] = useState(good.pressLike);
-	const [likeCount, setLikeCount] = useState(good.count);
-	const [comment, setComment] = useState("");
-	const [commentCount, setCommentCount] = useState(commentNum);
-
-	const likeOnClick = useCallback(async () => {
-		try {
-			const result = await axiosInstance({
-				method: "post",
-				url: "/like",
-				headers: {
-					Authorization:
-						"Bearer " + localStorage.getItem("accessToken"),
-				},
-				data: {
-					id,
-				},
-			});
-
-			setLike((_like) => !_like);
-			setLikeCount(result.data.count);
-		} catch (e) {
-			console.log(e);
-		}
-	}, [id]);
-
-	const commentOnChange = useCallback(
-		(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-			setComment(e.target.value);
-		},
-		[]
-	);
-
-	const commentOnSubmit = useCallback(
-		async (e?: React.FormEvent) => {
-			e?.preventDefault();
-
-			try {
-				const result = await axiosInstance({
-					method: "post",
-					url: "/post/comment",
-					headers: {
-						Authorization:
-							"Bearer " + localStorage.getItem("accessToken"),
-					},
-					data: {
-						type: "post",
-						id,
-						comment,
-					},
-				});
-				setComment("");
-				setCommentCount(result.data.count);
-			} catch (e) {
-				alert("댓글 쓰기에 실패하였습니다.");
-				console.log(e);
-			}
-		},
-		[id, comment]
-	);
-
-	const commentOnKeyDown = useCallback(
-		async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-			if (e.key === "Enter") {
-				if (!e.shiftKey) {
-					commentOnSubmit();
-				}
-			}
-		},
-		[commentOnSubmit]
-	);
 
 	return (
 		<div className="w-[min(100vw, 470px)] mb-[20px]">
@@ -106,7 +45,7 @@ function Feed({ id, author, text, images, commentNum, good }: IFeedComponent) {
 				</div>
 				<div className="flex-grow">
 					<span className="font-semibold text-[14px] leading-[18px]">
-						{author}
+						{feed.author}
 					</span>
 					<span className="font-normal text-[14px] text-[rgb(115,115,115)] mx-[4px]">
 						•
@@ -119,7 +58,11 @@ function Feed({ id, author, text, images, commentNum, good }: IFeedComponent) {
 					<img src={MoreIcon} width={24} height={24} />
 				</div>
 			</div>
-			<ImageSlideComponent width="468px" height="468px" images={images} />
+			<ImageSlideComponent
+				width="468px"
+				height="468px"
+				images={feed.images}
+			/>
 			<div className="w-full">
 				<div className="flex justify-between my-[4px] ml-[-8px]">
 					<div className="flex">
@@ -151,7 +94,7 @@ function Feed({ id, author, text, images, commentNum, good }: IFeedComponent) {
 				좋아요 {likeCount}개
 			</div>
 			<div className="flex mt-[8px] leading-[14px] text-[14px]">
-				<div className="font-semibold mr-[4px]">{author}</div>
+				<div className="font-semibold mr-[4px]">{feed.author}</div>
 				<div className="flex flex-grow">
 					<div
 						className={
@@ -160,7 +103,7 @@ function Feed({ id, author, text, images, commentNum, good }: IFeedComponent) {
 								: "h-[14px] overflow-x-hidden overflow-y-hidden text-ellipsis"
 						}
 					>
-						{text}
+						{feed.caption}
 					</div>
 					{!more && (
 						<div
@@ -174,7 +117,7 @@ function Feed({ id, author, text, images, commentNum, good }: IFeedComponent) {
 					)}
 				</div>
 			</div>
-			{commentNum !== 0 && (
+			{commentCount !== 0 && (
 				<div className="flex mt-[8px] leading-[18px] text-[14px] text-[rgb(115,115,115)] cursor-pointer">
 					<div>댓글 {commentCount}개 모두 보기</div>
 				</div>
