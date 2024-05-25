@@ -65,7 +65,7 @@ const feedSlice = createSlice({
 			})
 			.addCase(getFeedThunk.fulfilled, (state, action) => {
 				state.loading = false;
-				state.feed = action.payload.feed;
+				state.feed = action.payload;
 			})
 			.addCase(getFeedThunk.rejected, (state, action) => {
 				state.loading = false;

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import type { IFeedData } from "@/utils/types/feed";
+import CommentComponent from "./Comment";
 import ImageSlide from "@/components/home/Feed/ImageSlide";
 import ProfileImageButton from "@/atoms/button/ProfileImageButton";
 import ProfileImage from "@/assets/images/test/profile.jpg";
@@ -8,13 +10,13 @@ import HeartFilledIcon from "@/assets/images/icons/heart_fill.svg?react";
 import MessageIcon from "@/assets/images/icons/message.svg";
 import DirectIcon from "@/assets/images/icons/direct.svg";
 import BookmarkIcon from "@/assets/images/icons/bookmark.svg";
-import type { IFeedData } from "@/utils/types/feed";
 
 interface IDetailFeedComponent {
 	feed: IFeedData;
 	like: boolean;
 	comment: string;
 	commentOnChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+	commentOnSubmit: (e: React.FormEvent) => void;
 }
 
 function DetailFeedComponent({
@@ -22,6 +24,7 @@ function DetailFeedComponent({
 	like,
 	comment,
 	commentOnChange,
+	commentOnSubmit,
 }: IDetailFeedComponent) {
 	const [more, setMore] = useState(false);
 
@@ -51,8 +54,8 @@ function DetailFeedComponent({
 							<img src={MoreIcon} width={24} height={24} />
 						</div>
 					</div>
-					<div className="flex-grow px-[16px]  border-b border-b-[rgb(239,239,239)]">
-						<div className="flex mt-[8px] leading-[14px] text-[14px]">
+					<div className="flex-grow overflow-y-scroll px-[16px] border-b border-b-[rgb(239,239,239)]">
+						<div className="flex  mt-[8px] leading-[14px] text-[14px] mb-[15px]">
 							<div className="mr-[12px]">
 								<div className="w-[32px] h-[32px]">
 									<ProfileImageButton image={ProfileImage} />
@@ -61,7 +64,7 @@ function DetailFeedComponent({
 							<div className="font-semibold mr-[4px] flex-shrink-0 ">
 								{feed.author}
 							</div>
-							<div className="flex w-[80%] overflow-hidden">
+							<div className="flex flex-wrap flex-grow overflow-hidden">
 								<div
 									className={
 										more
@@ -81,13 +84,20 @@ function DetailFeedComponent({
 										... 더 보기
 									</div>
 								)}
+								<div className="mt-[8px] mb-[4px] font-normal text-[12px] leading-[16px] text-[rgb(115,115,115)] w-full flex-shrink-0">
+									1일
+								</div>
 							</div>
 						</div>
-						<div className="ml-[44px]">
-							<div className="font-normal text-[14px] text-[rgb(115,115,115)]">
-								1일
-							</div>
-						</div>
+
+						{feed.comment.map((c, index: number) => (
+							<CommentComponent
+								key={index}
+								author={c.author}
+								body={c.body}
+								date={c.date}
+							/>
+						))}
 					</div>
 
 					<div className="px-[16px]">
@@ -143,7 +153,10 @@ function DetailFeedComponent({
 						</div>
 					</div>
 					<div className="w-full px-[16px] pb-[10px] border-t border-b-[rgb(219,219,219)]">
-						<form className="mt-[8px] relative flex text-[14px] ">
+						<form
+							className="mt-[8px] relative flex text-[14px] "
+							onSubmit={commentOnSubmit}
+						>
 							<textarea
 								style={{
 									height: `${comment.split("\n").length * 20}px`,
