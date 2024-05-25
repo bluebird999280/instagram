@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ImageSlide from "@/components/home/Feed/ImageSlide";
 import ProfileImageButton from "@/atoms/button/ProfileImageButton";
-import ProfileImage from "./360035642_812561723859722_2543718457893992700_n.jpg";
+import ProfileImage from "@/assets/images/test/profile.jpg";
 import MoreIcon from "@/assets/images/icons/more.svg";
 import HeartIcon from "@/assets/images/icons/heart.svg";
 import HeartFilledIcon from "@/assets/images/icons/heart_fill.svg?react";
