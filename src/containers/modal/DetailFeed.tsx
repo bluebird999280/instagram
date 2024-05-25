@@ -40,6 +40,17 @@ function DetailFeedContainer() {
 		[feed, comment, dispatch]
 	);
 
+	const commentOnKeyDown = useCallback(
+		async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+			if (e.key === "Enter") {
+				if (!e.shiftKey) {
+					commentOnSubmit();
+				}
+			}
+		},
+		[commentOnSubmit]
+	);
+
 	const commentOnChange = useCallback(
 		(e: React.ChangeEvent<HTMLTextAreaElement>) =>
 			setComment(e.target.value),
@@ -52,6 +63,7 @@ function DetailFeedContainer() {
 			feed={feed}
 			like={like}
 			comment={comment}
+			commentOnKeyDown={commentOnKeyDown}
 			commentOnChange={commentOnChange}
 			commentOnSubmit={commentOnSubmit}
 		/>

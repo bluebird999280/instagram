@@ -17,6 +17,7 @@ interface IDetailFeedComponent {
 	comment: string;
 	commentOnChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 	commentOnSubmit: (e: React.FormEvent) => void;
+	commentOnKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
 }
 
 function DetailFeedComponent({
@@ -25,6 +26,7 @@ function DetailFeedComponent({
 	comment,
 	commentOnChange,
 	commentOnSubmit,
+	commentOnKeyDown,
 }: IDetailFeedComponent) {
 	const [more, setMore] = useState(false);
 
@@ -61,22 +63,33 @@ function DetailFeedComponent({
 									<ProfileImageButton image={ProfileImage} />
 								</div>
 							</div>
-							<div className="font-semibold mr-[4px] flex-shrink-0 ">
-								{feed.author}
-							</div>
-							<div className="flex flex-wrap flex-grow overflow-hidden">
+							<div>
 								<div
 									className={
 										more
-											? "h-auto overflow-x-visible overflow-y-visible text-wrap"
-											: "h-[14px] overflow-x-hidden overflow-y-hidden text-ellipsis"
+											? undefined
+											: "h-[18px] overflow-y-hidden"
 									}
 								>
-									{feed.caption}
+									<span className="font-semibold mr-[4px] flex-shrink-0 ">
+										{feed.author}
+									</span>
+
+									<span
+										className={
+											"leading-[20px] " +
+											(more
+												? "h-auto overflow-x-visible overflow-y-visible text-wrap"
+												: "w-full overflow-x-hidden overflow-y-hidden text-ellipsis")
+										}
+									>
+										{feed.caption}
+									</span>
 								</div>
+
 								{!more && (
 									<div
-										className="text-[rgb(115,115,115)] cursor-pointer flex-shrink-0"
+										className="mt-[4px] text-[rgb(115,115,115)] cursor-pointer flex-shrink-0"
 										onClick={() => {
 											setMore(true);
 										}}
@@ -164,6 +177,7 @@ function DetailFeedComponent({
 								value={comment}
 								placeholder="댓글 달기"
 								onChange={commentOnChange}
+								onKeyDown={commentOnKeyDown}
 								className="flex-grow outline-none border-none leading-[18px] resize-none max-h-[100px] min-h-[20px]"
 							/>
 							<button type="submit">
