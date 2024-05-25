@@ -88,9 +88,7 @@ function Feed({ id, author, text, images, commentNum, good }: IFeedComponent) {
 	const commentOnKeyDown = useCallback(
 		async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
 			if (e.key === "Enter") {
-				if (e.shiftKey) {
-					setComment((_comment) => _comment + "\n");
-				} else {
+				if (!e.shiftKey) {
 					commentOnSubmit();
 				}
 			}
@@ -181,16 +179,19 @@ function Feed({ id, author, text, images, commentNum, good }: IFeedComponent) {
 					<div>댓글 {commentCount}개 모두 보기</div>
 				</div>
 			)}
-			<div className="w-full border-b border-b-[rgb(219,219,219)]">
+			<div className="w-full pb-[10px] border-b border-b-[rgb(219,219,219)]">
 				<form
 					onSubmit={commentOnSubmit}
 					className="mt-[8px] relative flex text-[14px] "
 				>
 					<textarea
+						style={{
+							height: `${comment.split("\n").length * 20}px`,
+						}}
 						value={comment}
 						onChange={commentOnChange}
 						onKeyDown={commentOnKeyDown}
-						className="flex-grow outline-none border-none h-[18px] leading-[18px] max-h-[80px] resize-none "
+						className="flex-grow outline-none border-none leading-[18px] resize-none max-h-[100px] min-h-[20px]"
 					/>
 					<button type="submit">
 						<span className="font-bold  text-[rgb(0,149,246)]  flex items-center">
