@@ -1,16 +1,16 @@
 import { useEffect, useState, useRef } from "react";
 import FeedListComponent from "@/components/home/FeedList/FeedList";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/redux";
-import { getFeedListThunk } from "@/slices/view/thunk";
+import { getFeedListThunk } from "@/slices/feed/thunk";
 
 function FeedListContainer() {
 	const lock = useRef(false);
 	const endOfPageRef = useRef<HTMLDivElement>(null);
 	const [count, setCount] = useState(0);
 	const dispatch = useAppDispatch();
-	const loading = useAppSelector((state) => state.view.loading);
-	const error = useAppSelector((state) => state.view.error);
-	const feedList = useAppSelector((state) => state.view.feedList);
+	const loading = useAppSelector((state) => state.feed.loading);
+	const error = useAppSelector((state) => state.feed.error);
+	const feedList = useAppSelector((state) => state.feed.feedList);
 
 	useEffect(() => {
 		const element = endOfPageRef.current;

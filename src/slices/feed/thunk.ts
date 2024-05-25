@@ -4,7 +4,7 @@ import { IGetFeedListParams, IUploadFeedBody } from "@/utils/types/view";
 import { AxiosError } from "axios";
 
 export const getFeedListThunk = TypedCreateAsyncThunk(
-	"view/getFeedListThunk",
+	"feed/getFeedListThunk",
 	async (params: IGetFeedListParams, thunkAPI) => {
 		try {
 			const result = await getFeedListApi(params);
@@ -21,7 +21,7 @@ export const getFeedListThunk = TypedCreateAsyncThunk(
 );
 
 export const uploadFeedThunk = TypedCreateAsyncThunk(
-	"view/uploadFeedThunk",
+	"feed/uploadFeedThunk",
 	async ({ caption, files }: IUploadFeedBody, thunkAPI) => {
 		try {
 			const sendData = new FormData();

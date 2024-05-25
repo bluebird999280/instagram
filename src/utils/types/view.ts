@@ -12,19 +12,20 @@ export interface IFeedData {
 		count: number;
 		pressLike: boolean;
 	};
-	comment: {
-		author: string;
-		comment: {
-			author: string;
-			body: string;
-			date: string;
-			comment: {
+	comment:
+		| {
 				author: string;
 				body: string;
 				date: string;
-			} | null;
-		} | null;
-	}[];
+				comment:
+					| {
+							author: string;
+							body: string;
+							date: string;
+					  }[]
+					| [];
+		  }[]
+		| [];
 	createDate: string;
 }
 
