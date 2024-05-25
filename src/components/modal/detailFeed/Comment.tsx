@@ -34,7 +34,7 @@ function CommentComponent({ author, body, date }: ICommentComponent) {
 						좋아요 49개
 					</span>
 					<span className="text-[12px] leading-[16px] font-semibold text-[rgb(115,115,115)]">
-						답글 달기
+						<s>답글달기</s>
 					</span>
 				</div>
 			</div>
