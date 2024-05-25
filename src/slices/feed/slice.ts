@@ -61,7 +61,6 @@ const feedSlice = createSlice({
 			.addCase(getFeedThunk.pending, (state) => {
 				state.loading = true;
 				state.error = undefined;
-				state.feed = undefined;
 			})
 			.addCase(getFeedThunk.fulfilled, (state, action) => {
 				state.loading = false;
