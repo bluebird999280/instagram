@@ -7,8 +7,6 @@ import { getFeedThunk } from "@/slices/feed/thunk";
 function DetailFeedContainer() {
 	const dispatch = useAppDispatch();
 	const feed = useAppSelector((state) => state.feed.feed);
-	const [like, setLike] = useState(feed?.good.pressLike ?? false);
-	const [likeCount, setLikeCount] = useState(feed?.good.count ?? 0);
 	const [comment, setComment] = useState("");
 
 	const commentOnSubmit = useCallback(
@@ -57,11 +55,33 @@ function DetailFeedContainer() {
 		[]
 	);
 
+	const likeOnClick = useCallback(async () => {
+		if (feed === undefined) return;
+
+		try {
+			await axiosInstance({
+				method: "post",
+				url: "/like",
+				headers: {
+					Authorization:
+						"Bearer " + localStorage.getItem("accessToken"),
+				},
+				data: {
+					id: feed?._id,
+				},
+			});
+
+			dispatch(getFeedThunk({ id: feed?._id }));
+		} catch (e) {
+			console.log(e);
+		}
+	}, [feed, dispatch]);
+
 	if (feed === undefined) return null;
 	return (
 		<DetailFeedComponent
 			feed={feed}
-			like={like}
+			likeOnClick={likeOnClick}
 			comment={comment}
 			commentOnKeyDown={commentOnKeyDown}
 			commentOnChange={commentOnChange}

@@ -13,8 +13,8 @@ import BookmarkIcon from "@/assets/images/icons/bookmark.svg";
 
 interface IDetailFeedComponent {
 	feed: IFeedData;
-	like: boolean;
 	comment: string;
+	likeOnClick: () => void;
 	commentOnChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 	commentOnSubmit: (e: React.FormEvent) => void;
 	commentOnKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
@@ -22,8 +22,8 @@ interface IDetailFeedComponent {
 
 function DetailFeedComponent({
 	feed,
-	like,
 	comment,
+	likeOnClick,
 	commentOnChange,
 	commentOnSubmit,
 	commentOnKeyDown,
@@ -63,12 +63,12 @@ function DetailFeedComponent({
 									<ProfileImageButton image={ProfileImage} />
 								</div>
 							</div>
-							<div>
+							<div className="border-b border-b-gray-200 ">
 								<div
 									className={
 										more
 											? undefined
-											: "h-[18px] overflow-y-hidden"
+											: "h-[24px] overflow-y-hidden"
 									}
 								>
 									<span className="font-semibold mr-[4px] flex-shrink-0 ">
@@ -117,8 +117,11 @@ function DetailFeedComponent({
 						<div className="w-full">
 							<div className="flex justify-between my-[4px] ml-[-8px]">
 								<div className="flex">
-									<div className="p-[8px] cursor-pointer">
-										{like ? (
+									<div
+										className="p-[8px] cursor-pointer"
+										onClick={likeOnClick}
+									>
+										{feed.good.pressLike ? (
 											<HeartFilledIcon className="w-[24px] h-[24px] text-[rgb(255,48,64)]" />
 										) : (
 											<img
