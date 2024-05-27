@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import userRouter from "./routes/user";
 
 dotenv.config();
 const { PORT, MONGO_URI } = process.env;
@@ -13,6 +14,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("files"));
 app.use(express.urlencoded({ extended: true }));
+app.use("/api/user", userRouter);
 
 async function main() {
 	try {
