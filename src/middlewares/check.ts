@@ -2,14 +2,6 @@ import type { Request, Response, NextFunction } from "express";
 import { validateToken } from "../utils/jwt";
 import { JwtPayload } from "jsonwebtoken";
 
-declare global {
-	namespace Express {
-		interface Request {
-			user: JwtPayload;
-		}
-	}
-}
-
 /*
  * 토큰 확인 api
  * @headers authorization String
@@ -18,11 +10,6 @@ declare global {
  * - [401] AccessToken is expired. (token의 유효기간이 지났을 때)
  * - [500] Unknown Error (알 수 없는 오류가 발생했을 때)
  */
-
-type Error = {
-	errorName: string;
-	payload: undefined;
-};
 
 export default async function (
 	req: Request,
@@ -48,7 +35,7 @@ export default async function (
 		}
 
 		if (decodedAccessToken.token !== undefined) {
-			req.user = decodedAccessToken.token as JwtPayload;
+			res.locals.user = decodedAccessToken.token;
 			return next();
 		}
 	} catch (error) {
