@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import multer from "multer";
-import LikeSchema from "../models/like";
+import UserSchema from "../models/user";
 import PostSchema from "../models/post";
 import removeFiles from "../utils/removeFile";
 import { Error } from "mongoose";
@@ -11,7 +11,73 @@ import { MulterError } from "multer";
 const router = express.Router();
 
 /*
- * feed 업로드 POST api
+ * 다중 포스트 조회 api
+ * @http GET
+ * @query max number
+ * @query count number
+ * @status
+ * - [200] {length} 가져온 포스트 갯수
+ * - [400] There are not queries ( max나 count가 비어있을 경우 )
+ * - [400] There are no posts. ( 포스트를 더 이상 반환할 수 없을 때 )
+ * - [500] Unknown error (알 수 없는 오류가 발생했을 때)
+ *
+ */
+
+interface IPostQuery {
+	max?: number;
+	count?: number;
+}
+
+type ReturnType = {
+	id: string;
+	author: string;
+	caption: string;
+	contents?: string[];
+	pressLike: boolean;
+	likeCount: number;
+}[];
+
+router.get("/", async (req, res) => {
+	const { count, max }: IPostQuery = req.query;
+
+	if (count === undefined || max === undefined)
+		return res.status(400).send({ message: "There are not queries" });
+
+	try {
+		const PostModel = mongoose.model("post", PostSchema);
+
+		const posts = await PostModel.find()
+			.sort({ like: -1, createDate: 1 })
+			.skip(count * max)
+			.limit(max);
+
+		if (posts === undefined || posts.length === 0) {
+			return res.status(400).send({ message: "There are no posts" });
+		}
+
+		let result: ReturnType = [];
+		for (let i = 0; i < posts.length; i++) {
+			result.push({
+				id: posts[i]._id.toString(),
+				author: posts[i].author,
+				caption: posts[i].caption,
+				contents: posts[i].contents,
+				pressLike:
+					posts[i].likePeople.findIndex(
+						(person) => person === req.user._id
+					) > -1,
+				likeCount: posts[i].likeCount,
+			});
+		}
+
+		return res.send({ posts: result });
+	} catch (e) {
+		return res.status(500).send({ message: "Unknown error" });
+	}
+});
+
+/*
+ * 포스트 업로드 POST api
  * @body caption String
  * @files imageList Express.Request.files
  * status
@@ -106,9 +172,13 @@ router.post(
 		let video = 0;
 		const fileNameArray = files.map((file) => {
 			const ext = file.mimetype.split("/")[1];
-			if (["mp4", "avi"].includes(ext)) video += 1;
+			let type = "images";
+			if (["mp4", "avi"].includes(ext)) {
+				type = "videos";
+				video += 1;
+			}
 
-			return file.filename;
+			return `http://localhost:4000/files/${type}/${file.filename}`;
 		});
 
 		if (video > 1) {
@@ -120,16 +190,11 @@ router.post(
 
 		try {
 			const PostModel = mongoose.model("post", PostSchema);
-			const LikeModel = mongoose.model("like", LikeSchema);
 
-			const newPost = await new PostModel({
-				author: res.locals.user.nickName,
+			await new PostModel({
+				author: req.user.nickName,
 				caption,
-				content: fileNameArray,
-			}).save();
-
-			await new LikeModel({
-				parent: newPost._id,
+				contents: fileNameArray,
 			}).save();
 
 			return res.sendStatus(200);
