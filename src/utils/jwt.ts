@@ -1,10 +1,8 @@
-import { sign, verify } from "jsonwebtoken";
+import { JsonWebTokenError, JwtPayload, sign, verify } from "jsonwebtoken";
 import fs from "fs";
 import path from "path";
 
-type PayloadType = {
-	[key: string]: string;
-};
+type PayloadType = string | JwtPayload | undefined;
 
 export function generateToken(type: string, payload: PayloadType = {}) {
 	const expiresIn = type === "accessToken" ? "1h" : "1d";
@@ -25,7 +23,12 @@ export function generateToken(type: string, payload: PayloadType = {}) {
 	);
 }
 
-export function validateToken(token: string) {
+export type validateTokenReturnType = {
+	isExpired: boolean;
+	token: string | JwtPayload | undefined;
+};
+
+export function validateToken(token: string): Promise<validateTokenReturnType> {
 	const publicKey = fs.readFileSync(path.join(process.cwd(), "/public.key"));
 
 	return new Promise((resolve, reject) => {
@@ -35,9 +38,19 @@ export function validateToken(token: string) {
 			{
 				algorithms: ["RS256"],
 			},
-			(error, decodedToken) => {
+			(error, decoded) => {
+				if (error !== null && error.name === "TokenExpiredError") {
+					return resolve({
+						isExpired: true,
+						token: decoded,
+					});
+				}
+
 				if (error) return reject(error);
-				resolve(decodedToken);
+				return resolve({
+					isExpired: false,
+					token: decoded,
+				});
 			}
 		);
 	});
