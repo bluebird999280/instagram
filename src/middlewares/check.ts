@@ -35,7 +35,7 @@ export default async function (
 		}
 
 		if (decodedAccessToken.token !== undefined) {
-			res.locals.user = decodedAccessToken.token;
+			req.user = decodedAccessToken.token as JwtPayload;
 			return next();
 		}
 	} catch (error) {
