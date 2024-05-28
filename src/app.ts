@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import userRouter from "./routes/user";
 import postRouter from "./routes/post";
+import checkMiddleware from "./middlewares/check";
 
 dotenv.config();
 const { PORT, MONGO_URI } = process.env;
@@ -16,7 +17,7 @@ app.use(express.json());
 app.use(express.static("files"));
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/user", userRouter);
-app.use("/api/post", postRouter);
+app.use("/api/post", checkMiddleware, postRouter);
 
 async function main() {
 	try {
