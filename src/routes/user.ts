@@ -1,7 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
-import { generateToken } from "../utils/jwt";
+import { generateToken, validateToken } from "../utils/jwt";
 import UserSchema from "../models/user";
+import { JsonWebTokenError } from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -160,6 +161,51 @@ router.post("/signUp", async (req, res) => {
 		}),
 		refreshToken: generateToken("refreshToken"),
 	});
+});
+
+/* 인증 확인 API
+ * @http POST
+ * @body accessToken string
+ * @body refreshToken string
+ * @status
+ * - 200 { accessToken }
+ * - 400 AccessToken is required (엑세스 토큰이 비었을 경우)
+ * - 400 RefreshToken is required (리프레쉬 토큰이 비었을 경우)
+ * - 401 RefreshToken has expired (리프레쉬 토큰의 유효기간이 지났을 경우)
+ * - 500 Unknown error (알 수 없는 오류가 발생했을 경우)
+ */
+interface ICheckBody {
+	accessToken: string;
+	refreshToken: string;
+}
+
+router.post("/check", async (req, res) => {
+	const { accessToken, refreshToken }: ICheckBody = req.body;
+
+	if (accessToken === undefined) {
+		return res.status(400).send({
+			message: "AccessToken is required",
+		});
+	}
+
+	try {
+		const decodedAccessToken = await validateToken(accessToken);
+		if (!decodedAccessToken.isExpired) return res.send({ accessToken });
+
+		const decodedRefreshToken = await validateToken(refreshToken);
+		if (decodedRefreshToken.isExpired)
+			return res
+				.status(401)
+				.send({ message: "RefreshToken has expired" });
+
+		return res.send({
+			accessToken: generateToken("accessToken", decodedAccessToken.token),
+		});
+	} catch (error) {
+		return res.status(500).send({
+			message: "Unknown Error",
+		});
+	}
 });
 
 export default router;
