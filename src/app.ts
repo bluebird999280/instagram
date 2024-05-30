@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import userRouter from "./routes/user";
 import postRouter from "./routes/post";
+import commentRouter from "./routes/comment";
 import checkMiddleware from "./middlewares/check";
 
 dotenv.config();
@@ -18,6 +19,7 @@ app.use(express.static("files"));
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/user", userRouter);
 app.use("/api/post", checkMiddleware, postRouter);
+app.use("/api/comment", checkMiddleware, commentRouter);
 
 async function main() {
 	try {

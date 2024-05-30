@@ -1,12 +1,13 @@
 import express from "express";
 import mongoose from "mongoose";
 import multer from "multer";
-import UserSchema from "../models/user";
 import PostSchema from "../models/post";
 import removeFiles from "../utils/removeFile";
 import { Error } from "mongoose";
 import type { Request, Response, NextFunction } from "express";
 import { MulterError } from "multer";
+import CommentSchema from "../models/comment";
+import UserSchema from "../models/user";
 
 const router = express.Router();
 
@@ -45,6 +46,7 @@ router.get("/", async (req, res) => {
 
 	try {
 		const PostModel = mongoose.model("post", PostSchema);
+		const UserModel = mongoose.model("user", UserSchema);
 
 		const posts = await PostModel.find()
 			.sort({ like: -1, createDate: 1 })
@@ -57,14 +59,16 @@ router.get("/", async (req, res) => {
 
 		let result: ReturnType = [];
 		for (let i = 0; i < posts.length; i++) {
+			const userDoc = await UserModel.findById(posts[i].author);
+
 			result.push({
 				id: posts[i]._id.toString(),
-				author: posts[i].author,
+				author: userDoc?.nickName ?? "탈퇴한 사용자",
 				caption: posts[i].caption,
 				contents: posts[i].contents,
 				pressLike:
 					posts[i].likePeople.findIndex(
-						(person) => person === req.user._id
+						(person) => person === req.user.id
 					) > -1,
 				likeCount: posts[i].likeCount,
 			});
@@ -77,7 +81,70 @@ router.get("/", async (req, res) => {
 });
 
 /*
- * 포스트 업로드 POST api
+ * 단일 포스트 조회 api
+ * @http GET
+ * @params id String 포스트의 아이디
+ * @status
+ * - [200] 성공
+ * - [400] There is no id (id 값이 비었을 때)
+ * - [400] There is no post (가져올 포스트가 없을 때)
+ * - [500] Unknown error (알 수 없는 오류가 발생했을 때)
+ */
+router.get("/:id", async (req, res) => {
+	const { id } = req.params;
+
+	if (id === undefined) {
+		return res.status(400).send({
+			message: "There is no id",
+		});
+	}
+
+	const PostModel = mongoose.model("post", PostSchema);
+	const post = await PostModel.findById(id);
+
+	if (post === null || post === undefined) {
+		return res.status(400).send({ message: "There is no post" });
+	}
+
+	const UserModel = mongoose.model("user", UserSchema);
+	const CommentModel = mongoose.model("comment", CommentSchema);
+	const comments = await CommentModel.find({
+		parent: id,
+	});
+
+	const userDoc = await UserModel.findById(post.author);
+	let commentArray = [];
+	for (let i = 0; i < comments.length; i++) {
+		const commentUserDoc = await UserModel.findById(comments[i].author);
+		commentArray.push({
+			id: comments[i].id,
+			author: commentUserDoc?.nickName ?? "탈퇴한 사용자",
+			body: comments[i].body,
+			likeCount: comments[i].likeCount,
+			pressLike:
+				comments[i].likePeople.findIndex(
+					(person) => person === req.user.id
+				) > -1,
+			modificationDate: comments[i].modificationDate,
+		});
+	}
+
+	return res.send({
+		id,
+		caption: post.caption,
+		author: userDoc?.nickName ?? "탈퇴한 사용자",
+		contents: post.contents,
+		likeCount: post.likeCount,
+		pressLike:
+			post.likePeople.findIndex((person) => person === req.user.id) > -1,
+		comments: commentArray,
+		createDate: post.createDate,
+	});
+});
+
+/*
+ * 포스트 업로드 api
+ * @http POST
  * @body caption String
  * @files imageList Express.Request.files
  * status
@@ -192,7 +259,7 @@ router.post(
 			const PostModel = mongoose.model("post", PostSchema);
 
 			await new PostModel({
-				author: req.user.nickName,
+				author: req.user.id,
 				caption,
 				contents: fileNameArray,
 			}).save();
