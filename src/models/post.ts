@@ -2,7 +2,7 @@ import { Schema } from "mongoose";
 
 interface IPostSchema {
 	_id: Schema.Types.ObjectId;
-	author: string;
+	author: Schema.Types.ObjectId;
 	caption: string;
 	contents?: string[];
 	likeCount: number;
@@ -12,7 +12,7 @@ interface IPostSchema {
 
 const PostSchema = new Schema<IPostSchema>({
 	author: {
-		type: String,
+		type: Schema.Types.ObjectId,
 		required: true,
 	},
 	caption: {
