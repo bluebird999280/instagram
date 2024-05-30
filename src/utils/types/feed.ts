@@ -4,29 +4,14 @@ export interface IGetFeedListParams {
 }
 
 export interface IFeedData {
-	_id: string;
+	id: string;
 	author: string;
 	caption: string;
-	images: string[];
-	good: {
-		count: number;
-		pressLike: boolean;
-	};
-	comment:
-		| {
-				author: string;
-				body: string;
-				date: string;
-				comment:
-					| {
-							author: string;
-							body: string;
-							date: string;
-					  }[]
-					| [];
-		  }[]
-		| [];
+	contents: string[];
+	pressLike: boolean;
+	likeCount: number;
 	createDate: string;
+	commentCount: number;
 }
 
 export interface IUploadFeedBody {
