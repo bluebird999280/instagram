@@ -57,16 +57,17 @@ function FeedContainer({ feed }: IFeedContainer) {
 			try {
 				await axiosInstance({
 					method: "post",
-					url: "/post/comment",
+					url: "/comment",
 					headers: {
 						Authorization:
 							"Bearer " + localStorage.getItem("accessToken"),
 					},
 					data: {
 						id: feed.id,
-						comment,
+						body: comment,
 					},
 				});
+				setComment("");
 			} catch (e) {
 				alert("댓글 쓰기에 실패하였습니다.");
 				console.log(e);
