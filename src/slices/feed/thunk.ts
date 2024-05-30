@@ -31,7 +31,7 @@ export const uploadFeedThunk = TypedCreateAsyncThunk(
 
 			if (files !== undefined) {
 				for (let i = 0; i < files.length; i++) {
-					sendData.append("images", files[i]);
+					sendData.append("files", files[i]);
 				}
 			}
 
