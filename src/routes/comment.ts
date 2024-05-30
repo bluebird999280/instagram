@@ -45,4 +45,53 @@ router.post("/", async (req, res) => {
 	}
 });
 
+/*
+ * 좋아요 수정 api
+ * @method GET
+ * @query id string
+ * @status
+ * - [400] The query does not exist.
+ * - [500] Unknown error
+ */
+interface ICommentEditQuery {
+	id?: string;
+}
+
+router.get("/like", async (req, res) => {
+	const { id }: ICommentEditQuery = req.query;
+
+	if (id === undefined) {
+		return res.status(400).send({ message: "The query does not exist" });
+	}
+
+	try {
+		const CommentModel = mongoose.model("comment", CommentSchema);
+
+		const commentDoc = await CommentModel.findById(id);
+
+		if (commentDoc === null) {
+			return res.status(400).send({ message: "There is no comment" });
+		}
+
+		const isPressedLike =
+			commentDoc.likePeople.findIndex(
+				(person) => person.toString() === req.user.id
+			) > -1;
+		if (isPressedLike) {
+			commentDoc.likeCount -= 1;
+			commentDoc.likePeople = commentDoc.likePeople.filter(
+				(person) => person.toString() !== req.user.id
+			);
+		} else {
+			commentDoc.likeCount += 1;
+			commentDoc.likePeople = [...commentDoc.likePeople, req.user.id];
+		}
+
+		await commentDoc.save();
+		return res.sendStatus(200);
+	} catch (e) {
+		return res.status(500).send({ message: "Unknown error" });
+	}
+});
+
 export default router;
