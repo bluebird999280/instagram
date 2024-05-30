@@ -66,7 +66,7 @@ router.post("/signIn", async (req, res) => {
 
 	return res.send({
 		accessToken: generateToken("accessToken", {
-			id: userDoc._id.toString(),
+			id: userDoc.id,
 			nickName: userDoc.nickName,
 			fullName: userDoc.fullName,
 			photo: userDoc.photo,
@@ -154,7 +154,7 @@ router.post("/signUp", async (req, res) => {
 
 	return res.send({
 		accessToken: generateToken("accessToken", {
-			id: userDoc._id.toString(),
+			id: userDoc.id,
 			nickName: userDoc.nickName,
 			fullName: userDoc.fullName,
 			photo: userDoc.photo,

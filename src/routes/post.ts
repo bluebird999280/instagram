@@ -109,13 +109,13 @@ router.get("/", async (req, res) => {
 			const userDoc = await UserModel.findById(posts[i].author);
 
 			result.push({
-				id: posts[i]._id.toString(),
+				id: posts[i].id,
 				author: userDoc?.nickName ?? "탈퇴한 사용자",
 				caption: posts[i].caption,
 				contents: posts[i].contents,
 				pressLike:
 					posts[i].likePeople.findIndex(
-						(person) => person === req.user.id
+						(person) => person.toString() === req.user.id
 					) > -1,
 				likeCount: posts[i].likeCount,
 			});
@@ -170,7 +170,7 @@ router.get("/:id", async (req, res) => {
 			likeCount: comments[i].likeCount,
 			pressLike:
 				comments[i].likePeople.findIndex(
-					(person) => person === req.user.id
+					(person) => person.toString() === req.user.id
 				) > -1,
 			modificationDate: comments[i].modificationDate,
 		});
@@ -183,7 +183,9 @@ router.get("/:id", async (req, res) => {
 		contents: post.contents,
 		likeCount: post.likeCount,
 		pressLike:
-			post.likePeople.findIndex((person) => person === req.user.id) > -1,
+			post.likePeople.findIndex(
+				(person) => person.toString() === req.user.id
+			) > -1,
 		comments: commentArray,
 		createDate: post.createDate,
 	});
