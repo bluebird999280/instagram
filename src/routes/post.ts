@@ -1,15 +1,62 @@
-import express from "express";
-import mongoose from "mongoose";
-import multer from "multer";
+import express, { Request, Response, NextFunction } from "express";
+import mongoose, { Error } from "mongoose";
+import multer, { MulterError } from "multer";
 import PostSchema from "../models/post";
-import removeFiles from "../utils/removeFile";
-import { Error } from "mongoose";
-import type { Request, Response, NextFunction } from "express";
-import { MulterError } from "multer";
 import CommentSchema from "../models/comment";
 import UserSchema from "../models/user";
+import removeFiles from "../utils/removeFile";
 
 const router = express.Router();
+
+/*
+ * 좋아요 수정 api
+ * @method GET
+ * @query id string
+ * @status
+ * - [400] The query does not exist.
+ * - [500] Unknown error
+ */
+interface ICommentEditQuery {
+	id?: string;
+}
+
+router.get("/like", async (req, res) => {
+	const { id }: ICommentEditQuery = req.query;
+
+	if (id === undefined) {
+		return res.status(400).send({ message: "The query does not exist" });
+	}
+
+	try {
+		const PostModel = mongoose.model("post", PostSchema);
+
+		const postDoc = await PostModel.findOne({
+			_id: id,
+		});
+		if (postDoc === null) {
+			return res.status(400).send({ message: "There is no post" });
+		}
+
+		const isPressedLike =
+			postDoc.likePeople.findIndex(
+				(person) => person.toString() === req.user.id
+			) > -1;
+		if (isPressedLike) {
+			postDoc.likeCount -= 1;
+			postDoc.likePeople = postDoc.likePeople.filter(
+				(person) => person.toString() !== req.user.id
+			);
+		} else {
+			postDoc.likeCount += 1;
+			postDoc.likePeople = [...postDoc.likePeople, req.user.id];
+		}
+
+		await postDoc.save();
+		return res.sendStatus(200);
+	} catch (e) {
+		return res.status(500).send({ message: "Unknown error" });
+	}
+});
 
 /*
  * 다중 포스트 조회 api
