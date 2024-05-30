@@ -12,10 +12,9 @@ import ImageSlideComponent from "./ImageSlide";
 
 interface IFeedComponent {
 	feed: IFeedData;
-	like: boolean;
-	likeCount: number;
 	comment: string;
-	commentCount: number;
+	likeCount: number;
+	pressLike: boolean;
 	likeOnClick: () => void;
 	commentOnClick: () => void;
 	commentOnChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -25,10 +24,9 @@ interface IFeedComponent {
 
 function Feed({
 	feed,
-	like,
-	likeCount,
 	comment,
-	commentCount,
+	likeCount,
+	pressLike,
 	likeOnClick,
 	commentOnClick,
 	commentOnChange,
@@ -63,7 +61,7 @@ function Feed({
 			<ImageSlideComponent
 				width="468px"
 				height="468px"
-				images={feed.images}
+				images={feed.contents}
 			/>
 			<div className="w-full">
 				<div className="flex justify-between my-[4px] ml-[-8px]">
@@ -72,7 +70,7 @@ function Feed({
 							className="p-[8px] cursor-pointer"
 							onClick={likeOnClick}
 						>
-							{like ? (
+							{pressLike ? (
 								<HeartFilledIcon className="w-[24px] h-[24px] text-[rgb(255,48,64)]" />
 							) : (
 								<img src={HeartIcon} width={24} height={24} />
@@ -122,12 +120,12 @@ function Feed({
 					)}
 				</div>
 			</div>
-			{commentCount !== 0 && (
+			{feed.commentCount !== 0 && (
 				<div
 					className="flex mt-[8px] leading-[18px] text-[14px] text-[rgb(115,115,115)] cursor-pointer"
 					onClick={commentOnClick}
 				>
-					<div>댓글 {commentCount}개 모두 보기</div>
+					<div>댓글 {feed.commentCount}개 모두 보기</div>
 				</div>
 			)}
 			<div className="w-full pb-[10px] border-b border-b-[rgb(219,219,219)]">

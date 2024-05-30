@@ -12,34 +12,34 @@ interface IFeedContainer {
 
 function FeedContainer({ feed }: IFeedContainer) {
 	const dispatch = useAppDispatch();
-	const [like, setLike] = useState(feed.good.pressLike);
-	const [likeCount, setLikeCount] = useState(feed.good.count);
+	const [likeCount, setLikeCount] = useState(feed.likeCount);
+	const [pressLike, setPressLike] = useState(feed.pressLike);
 	const [comment, setComment] = useState("");
-	const [commentCount, setCommentCount] = useState(feed.comment.length);
 
 	const likeOnClick = useCallback(async () => {
 		try {
-			const result = await axiosInstance({
-				method: "post",
-				url: "/like",
+			await axiosInstance({
+				method: "get",
+				url: "/post/like",
 				headers: {
 					Authorization:
 						"Bearer " + localStorage.getItem("accessToken"),
 				},
-				data: {
-					id: feed._id,
+				params: {
+					id: feed.id,
 				},
 			});
-
-			setLike((_like) => !_like);
-			setLikeCount(result.data.count);
+			setLikeCount((_likeCount) =>
+				pressLike ? _likeCount - 1 : _likeCount + 1
+			);
+			setPressLike((_pressLike) => !_pressLike);
 		} catch (e) {
 			console.log(e);
 		}
-	}, [feed]);
+	}, [feed, pressLike]);
 
 	const commentOnClick = useCallback(() => {
-		dispatch(getFeedThunk({ id: feed._id }));
+		dispatch(getFeedThunk({ id: feed.id }));
 		dispatch(setModal("showDetailFeed"));
 	}, [dispatch, feed]);
 
@@ -55,7 +55,7 @@ function FeedContainer({ feed }: IFeedContainer) {
 			e?.preventDefault();
 
 			try {
-				const result = await axiosInstance({
+				await axiosInstance({
 					method: "post",
 					url: "/post/comment",
 					headers: {
@@ -63,13 +63,10 @@ function FeedContainer({ feed }: IFeedContainer) {
 							"Bearer " + localStorage.getItem("accessToken"),
 					},
 					data: {
-						type: "post",
-						id: feed._id,
+						id: feed.id,
 						comment,
 					},
 				});
-				setComment("");
-				setCommentCount(result.data.count);
 			} catch (e) {
 				alert("댓글 쓰기에 실패하였습니다.");
 				console.log(e);
@@ -92,10 +89,9 @@ function FeedContainer({ feed }: IFeedContainer) {
 	return (
 		<FeedComponent
 			feed={feed}
-			like={like}
-			likeCount={likeCount}
 			comment={comment}
-			commentCount={commentCount}
+			likeCount={likeCount}
+			pressLike={pressLike}
 			likeOnClick={likeOnClick}
 			commentOnClick={commentOnClick}
 			commentOnChange={commentOnChange}
