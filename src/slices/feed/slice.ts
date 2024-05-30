@@ -29,19 +29,20 @@ const feedSlice = createSlice({
 			.addCase(getFeedListThunk.fulfilled, (state, action) => {
 				state.loading = false;
 
-				for (let i = 0; i < action.payload.feeds.length; i++) {
-					if (
-						state.feedList.length !== 0 &&
-						state.feedList[
-							state.feedList.length -
-								action.payload.feeds.length +
-								i
-						]._id === action.payload.feeds[i]._id
-					)
-						return;
+				if (state.feedList.length === 0)
+					state.feedList = action.payload.posts;
+				else {
+					for (let i = 0; i < action.payload.posts.length; i++) {
+						if (
+							state.feedList[
+								state.feedList.length -
+									action.payload.posts.length +
+									i
+							].id !== action.payload.posts[i].id
+						)
+							state.feedList.push(action.payload.posts[i]);
+					}
 				}
-
-				state.feedList.push(...action.payload.feeds);
 			})
 			.addCase(getFeedListThunk.rejected, (state, action) => {
 				state.loading = false;
