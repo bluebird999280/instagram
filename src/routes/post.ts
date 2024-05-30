@@ -83,6 +83,7 @@ type ReturnType = {
 	contents?: string[];
 	pressLike: boolean;
 	likeCount: number;
+	commentCount: number;
 }[];
 
 router.get("/", async (req, res) => {
@@ -94,6 +95,7 @@ router.get("/", async (req, res) => {
 	try {
 		const PostModel = mongoose.model("post", PostSchema);
 		const UserModel = mongoose.model("user", UserSchema);
+		const CommentModel = mongoose.model("comment", CommentSchema);
 
 		const posts = await PostModel.find()
 			.sort({ like: -1, createDate: 1 })
@@ -107,6 +109,9 @@ router.get("/", async (req, res) => {
 		let result: ReturnType = [];
 		for (let i = 0; i < posts.length; i++) {
 			const userDoc = await UserModel.findById(posts[i].author);
+			const commentDoc = await CommentModel.find({
+				parent: posts[i]._id,
+			});
 
 			result.push({
 				id: posts[i].id,
@@ -118,6 +123,7 @@ router.get("/", async (req, res) => {
 						(person) => person.toString() === req.user.id
 					) > -1,
 				likeCount: posts[i].likeCount,
+				commentCount: commentDoc.length,
 			});
 		}
 
@@ -186,6 +192,7 @@ router.get("/:id", async (req, res) => {
 			post.likePeople.findIndex(
 				(person) => person.toString() === req.user.id
 			) > -1,
+		commentCount: commentArray.length,
 		comments: commentArray,
 		createDate: post.createDate,
 	});
@@ -238,6 +245,7 @@ function uploadErrorMiddleware(
 ) {
 	if (err instanceof MulterError) {
 		const multerError = err as MulterError;
+		console.log(multerError);
 		if (multerError.code === "LIMIT_UNEXPECTED_FILE") {
 			return res
 				.status(400)
@@ -279,12 +287,6 @@ router.post(
 				.send({ message: "Caption is longer than 2200" });
 		}
 
-		// errorHandler에서 처리
-		// if (files.length > 12) {
-		// 	removeFiles(filePathArray);
-		// 	return res.status(400).send({ message: "There are too many files" });
-		// }
-
 		let video = 0;
 		const fileNameArray = files.map((file) => {
 			const ext = file.mimetype.split("/")[1];
@@ -294,7 +296,7 @@ router.post(
 				video += 1;
 			}
 
-			return `http://localhost:4000/files/${type}/${file.filename}`;
+			return `http://localhost:4000/${type}/${file.filename}`;
 		});
 
 		if (video > 1) {
@@ -315,6 +317,7 @@ router.post(
 
 			return res.sendStatus(200);
 		} catch (error) {
+			console.log(error);
 			return res.status(500).send({
 				message: "Unknown error",
 			});
