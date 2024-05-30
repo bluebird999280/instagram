@@ -11,6 +11,14 @@ export interface IFeedData {
 	pressLike: boolean;
 	likeCount: number;
 	createDate: string;
+	comments?: {
+		id: string;
+		author: string;
+		body: string;
+		likeCount: number;
+		pressLike: boolean;
+		modificationDate: Date;
+	}[];
 	commentCount: number;
 }
 

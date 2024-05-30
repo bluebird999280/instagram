@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/utils/hooks/redux";
 import axiosInstance from "@/utils/axios/index";
 import DetailFeedComponent from "@/components/modal/detailFeed/DetailFeed";
 import { getFeedThunk } from "@/slices/feed/thunk";
+import { setFeedList } from "@/slices/feed/slice";
 
 function DetailFeedContainer() {
 	const dispatch = useAppDispatch();
@@ -17,19 +18,25 @@ function DetailFeedContainer() {
 			try {
 				await axiosInstance({
 					method: "post",
-					url: "/post/comment",
+					url: "/comment",
 					headers: {
 						Authorization:
 							"Bearer " + localStorage.getItem("accessToken"),
 					},
 					data: {
-						type: "post",
-						id: feed?._id,
-						comment,
+						id: feed?.id,
+						body: comment,
 					},
 				});
+				dispatch(
+					setFeedList({
+						id: feed.id,
+						field: "commentCount",
+						value: feed.commentCount + 1,
+					})
+				);
 				setComment("");
-				dispatch(getFeedThunk({ id: feed?._id }));
+				dispatch(getFeedThunk({ id: feed?.id }));
 			} catch (e) {
 				alert("댓글 쓰기에 실패하였습니다.");
 				console.log(e);
@@ -60,18 +67,33 @@ function DetailFeedContainer() {
 
 		try {
 			await axiosInstance({
-				method: "post",
-				url: "/like",
+				method: "get",
+				url: "/post/like",
 				headers: {
 					Authorization:
 						"Bearer " + localStorage.getItem("accessToken"),
 				},
-				data: {
-					id: feed?._id,
+				params: {
+					id: feed?.id,
 				},
 			});
-
-			dispatch(getFeedThunk({ id: feed?._id }));
+			dispatch(
+				setFeedList({
+					id: feed.id,
+					field: "likeCount",
+					value: feed.pressLike
+						? feed.likeCount - 1
+						: feed.likeCount + 1,
+				})
+			);
+			dispatch(
+				setFeedList({
+					id: feed.id,
+					field: "pressLike",
+					value: !feed.pressLike,
+				})
+			);
+			dispatch(getFeedThunk({ id: feed?.id }));
 		} catch (e) {
 			console.log(e);
 		}

@@ -37,7 +37,7 @@ function DetailFeedComponent({
 					<ImageSlide
 						width="100%"
 						height="100%"
-						images={["1716394071591.png", "1716416038985.jpeg"]}
+						images={feed.contents}
 					/>
 				</div>
 				<div className="max-w-[500px] min-w-[405px] flex-shrink-[2] flex flex-col flex-grow bg-white ">
@@ -103,12 +103,12 @@ function DetailFeedComponent({
 							</div>
 						</div>
 
-						{feed.comment.map((c, index: number) => (
+						{feed.comments?.map((comment) => (
 							<CommentComponent
-								key={index}
-								author={c.author}
-								body={c.body}
-								date={c.date}
+								key={comment.id}
+								author={comment.author}
+								body={comment.body}
+								date={comment.modificationDate}
 							/>
 						))}
 					</div>
@@ -121,7 +121,7 @@ function DetailFeedComponent({
 										className="p-[8px] cursor-pointer"
 										onClick={likeOnClick}
 									>
-										{feed.good.pressLike ? (
+										{feed.pressLike ? (
 											<HeartFilledIcon className="w-[24px] h-[24px] text-[rgb(255,48,64)]" />
 										) : (
 											<img
@@ -159,7 +159,7 @@ function DetailFeedComponent({
 						</div>
 						<div className="mb-[10px]">
 							<div className="leading-[18px] text-[14px] font-bold ">
-								좋아요 {feed.good.count}개
+								좋아요 {feed.likeCount}개
 							</div>
 							<div>
 								<div className="font-normal text-[12px] text-[rgb(115,115,115)]">

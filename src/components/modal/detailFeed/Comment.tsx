@@ -5,7 +5,7 @@ import LikeIcon from "@/assets/images/icons/like.svg?react";
 interface ICommentComponent {
 	author: string;
 	body: string;
-	date: string;
+	date: Date;
 }
 
 function CommentComponent({ author, body, date }: ICommentComponent) {
@@ -28,7 +28,7 @@ function CommentComponent({ author, body, date }: ICommentComponent) {
 				</div>
 				<div>
 					<span className="text-[12px] leading-[16px] text-[rgb(115,115,115)] mr-[6px]">
-						{date}
+						{date.toString()}
 					</span>
 					<span className="text-[12px] leading-[16px] font-semibold text-[rgb(115,115,115)] mr-[6px]">
 						좋아요 49개

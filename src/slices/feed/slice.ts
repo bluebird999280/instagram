@@ -19,7 +19,18 @@ const initialState: IInitialState = {
 const feedSlice = createSlice({
 	name: "view",
 	initialState,
-	reducers: {},
+	reducers: {
+		setFeedList: (state, { payload: { id, field, value } }) => {
+			state.feedList = state.feedList.map((feed) => {
+				if (feed.id === id)
+					return {
+						...feed,
+						[field]: value,
+					};
+				return feed;
+			});
+		},
+	},
 	extraReducers: (builder) =>
 		builder
 			.addCase(getFeedListThunk.pending, (state) => {
@@ -73,4 +84,5 @@ const feedSlice = createSlice({
 			}),
 });
 
+export const { setFeedList } = feedSlice.actions;
 export default feedSlice.reducer;

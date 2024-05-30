@@ -5,6 +5,7 @@ import axiosInstance from "@/utils/axios/index";
 import type { IFeedData } from "@/utils/types/feed";
 import FeedComponent from "@/components/home/Feed/Feed";
 import { getFeedThunk } from "@/slices/feed/thunk";
+import { setFeedList } from "@/slices/feed/slice";
 
 interface IFeedContainer {
 	feed: IFeedData;
@@ -12,8 +13,6 @@ interface IFeedContainer {
 
 function FeedContainer({ feed }: IFeedContainer) {
 	const dispatch = useAppDispatch();
-	const [likeCount, setLikeCount] = useState(feed.likeCount);
-	const [pressLike, setPressLike] = useState(feed.pressLike);
 	const [comment, setComment] = useState("");
 
 	const likeOnClick = useCallback(async () => {
@@ -29,14 +28,26 @@ function FeedContainer({ feed }: IFeedContainer) {
 					id: feed.id,
 				},
 			});
-			setLikeCount((_likeCount) =>
-				pressLike ? _likeCount - 1 : _likeCount + 1
+			dispatch(
+				setFeedList({
+					id: feed.id,
+					field: "likeCount",
+					value: feed.pressLike
+						? feed.likeCount - 1
+						: feed.likeCount + 1,
+				})
 			);
-			setPressLike((_pressLike) => !_pressLike);
+			dispatch(
+				setFeedList({
+					id: feed.id,
+					field: "pressLike",
+					value: !feed.pressLike,
+				})
+			);
 		} catch (e) {
 			console.log(e);
 		}
-	}, [feed, pressLike]);
+	}, [feed, dispatch]);
 
 	const commentOnClick = useCallback(() => {
 		dispatch(getFeedThunk({ id: feed.id }));
@@ -67,13 +78,20 @@ function FeedContainer({ feed }: IFeedContainer) {
 						body: comment,
 					},
 				});
+				dispatch(
+					setFeedList({
+						id: feed.id,
+						field: "commentCount",
+						value: feed.commentCount + 1,
+					})
+				);
 				setComment("");
 			} catch (e) {
 				alert("댓글 쓰기에 실패하였습니다.");
 				console.log(e);
 			}
 		},
-		[feed, comment]
+		[feed, comment, dispatch]
 	);
 
 	const commentOnKeyDown = useCallback(
@@ -91,8 +109,6 @@ function FeedContainer({ feed }: IFeedContainer) {
 		<FeedComponent
 			feed={feed}
 			comment={comment}
-			likeCount={likeCount}
-			pressLike={pressLike}
 			likeOnClick={likeOnClick}
 			commentOnClick={commentOnClick}
 			commentOnChange={commentOnChange}

@@ -13,8 +13,6 @@ import ImageSlideComponent from "./ImageSlide";
 interface IFeedComponent {
 	feed: IFeedData;
 	comment: string;
-	likeCount: number;
-	pressLike: boolean;
 	likeOnClick: () => void;
 	commentOnClick: () => void;
 	commentOnChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -25,8 +23,6 @@ interface IFeedComponent {
 function Feed({
 	feed,
 	comment,
-	likeCount,
-	pressLike,
 	likeOnClick,
 	commentOnClick,
 	commentOnChange,
@@ -70,7 +66,7 @@ function Feed({
 							className="p-[8px] cursor-pointer"
 							onClick={likeOnClick}
 						>
-							{pressLike ? (
+							{feed.pressLike ? (
 								<HeartFilledIcon className="w-[24px] h-[24px] text-[rgb(255,48,64)]" />
 							) : (
 								<img src={HeartIcon} width={24} height={24} />
@@ -94,7 +90,7 @@ function Feed({
 				</div>
 			</div>
 			<div className="leading-[18px] text-[14px] font-bold ">
-				좋아요 {likeCount}개
+				좋아요 {feed.likeCount}개
 			</div>
 			<div className="flex mt-[8px] leading-[14px] text-[14px]">
 				<div className="font-semibold mr-[4px]">{feed.author}</div>
