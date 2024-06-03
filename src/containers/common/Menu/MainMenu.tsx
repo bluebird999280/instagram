@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/utils/hooks/redux";
 import MainMenuComponent from "@/components/common/menu/MainMenu/MainMenu";
