@@ -20,11 +20,14 @@ jobs :
       - name : Publish to docker hub
         run : docker push bluebird999280/backend
       - name : Connect to EC2 and upload docker image
-        username : ubuntu
-        key : ${{ secrets.SERVER_TOKEN }}
-        port : 22
-        script : |
-          docker stop instagram_backend
-          docker rm instagram_backend
-          docker pull bluebird999280/backend
-          docker run -d -p 4000:4000 instagram_backend bluebird999280/backend
+        usess : appleboy/ssh-action@v0.1.6
+        with :
+          host : 13.124.70.98
+          username : ubuntu
+          key : ${{ secrets.SERVER_TOKEN }}
+          port : 22
+          script : |
+            docker stop instagram_backend
+            docker rm instagram_backend
+            docker pull bluebird999280/backend
+            docker run -d -p 4000:4000 instagram_backend bluebird999280/backend
