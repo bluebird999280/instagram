@@ -20,7 +20,7 @@ jobs :
       - name : Publish to docker hub
         run : docker push bluebird999280/backend
       - name : Connect to EC2 and upload docker image
-        usess : appleboy/ssh-action@v0.1.6
+        uses : appleboy/ssh-action@v0.1.6
         with :
           host : 13.124.70.98
           username : ubuntu
