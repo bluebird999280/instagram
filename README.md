@@ -13,4 +13,5 @@
 3. Github action과 docker에 대한 기반 지식 확장하기
 
 <a href="https://www.erdcloud.com/p/QSk6c5GGpLey8RhRE">Erd Cloud</a>
+<a href="http://13.124.70.98:4173/home">서버 배포</a>
 
