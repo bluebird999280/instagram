@@ -17,3 +17,5 @@ jobs :
         with :
           username : ${{ secrets.DOCKERHUB_USERNAME }} 
           password : ${{ secrets.DOCKERHUB_TOKEN  }} 
+      - name : Publish to docker hub
+        run : docker push backend:v2.5
