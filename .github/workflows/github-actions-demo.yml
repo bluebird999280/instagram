@@ -11,4 +11,4 @@ jobs :
       - name : build project
         run : npm run build
       - name : build docker image
-        run : docker build -t backend:v2.5
+        run : docker build -t backend:v2.5 .
