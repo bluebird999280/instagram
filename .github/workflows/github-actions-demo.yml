@@ -32,3 +32,4 @@ jobs :
             docker image prune -a
             docker pull bluebird999280/frontend
             docker run -d -p 4000:4000 --name instagram_frontend bluebird999280/frontend
+            docker-compose up -d
