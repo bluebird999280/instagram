@@ -9,5 +9,5 @@ jobs :
       - name : install package
         run : npm install
       - name : build project
-        run : npm build
+        run : npm run build
       
