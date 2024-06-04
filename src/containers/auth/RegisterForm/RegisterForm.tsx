@@ -3,7 +3,6 @@ import { useAppDispatch, useAppSelector } from "@/utils/hooks/redux";
 import RegisterFormComponent from "@/components/auth/RegisterForm/RegisterForm";
 import errors from "@/utils/data/errors";
 import { registerThunk } from "@/slices/user/thunk";
-
 interface IRegisterContainer {
 	loginButtonOnClick: () => void;
 }

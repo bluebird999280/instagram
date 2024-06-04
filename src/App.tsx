@@ -35,13 +35,14 @@ function App() {
 		}
 	}, [location.pathname, navigate, isLogin]);
 
-	if (loading) return <LoadingComponent />;
-
 	return (
-		<Routes>
-			<Route path="/" element={<AuthPage />} />
-			<Route path="/home" element={<HomePage />} />
-		</Routes>
+		<>
+			{loading && <LoadingComponent />}
+			<Routes>
+				<Route path="/" element={<AuthPage />} />
+				<Route path="/home" element={<HomePage />} />
+			</Routes>
+		</>
 	);
 }
 
