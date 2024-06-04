@@ -4,7 +4,8 @@
 	"description": "1. 시작 날짜 : 2024년 5월 15일 2. 목표 기간 : 1개월 (2024년 6월 14일)",
 	"main": "src/app.tsx",
 	"scripts": {
-		"dev": "ts-node-dev --files ./src/app.ts"
+		"dev": "ts-node-dev --files ./src/app.ts",
+		"build": "tsc --outDir dist && node ./dist/app.js"
 	},
 	"author": "",
 	"license": "ISC",
