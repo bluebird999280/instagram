@@ -11,7 +11,7 @@ jobs :
       - name : build project
         run : npm run build
       - name : build docker image
-        run : docker build -t backend:v2.5 .
+        run : docker build -t bluebird999280/backend .
       - name : Login docker hub
         uses : docker/login-action@v2
         with :
