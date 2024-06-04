@@ -296,7 +296,7 @@ router.post(
 				video += 1;
 			}
 
-			return `http://3.36.121.169:4000/${type}/${file.filename}`;
+			return `http://${process.env.SERVER_ADDRESS}:4000/${type}/${file.filename}`;
 		});
 
 		if (video > 1) {
