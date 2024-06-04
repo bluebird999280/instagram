@@ -10,4 +10,5 @@ jobs :
         run : npm install
       - name : build project
         run : npm run build
-      
+      - name : build docker image
+        run : docker build -t backend_container/backend_image
