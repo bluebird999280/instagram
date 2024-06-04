@@ -30,4 +30,4 @@ jobs :
             docker stop instagram_backend
             docker rm instagram_backend
             docker pull bluebird999280/backend
-            docker run -d -p 4000:4000 instagram_backend bluebird999280/backend
+            docker run -d -p 4000:4000 --name instagram_backend bluebird999280/backend
