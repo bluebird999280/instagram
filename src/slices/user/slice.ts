@@ -17,6 +17,9 @@ export const userSlice = createSlice({
 	name: "user",
 	initialState,
 	reducers: {
+		resetError: (state) => {
+			state.error = undefined;
+		},
 		setIsLogin: (state, action: PayloadAction<boolean>) => {
 			const accessToken = localStorage.getItem("accessToken");
 			const refreshToken = localStorage.getItem("refreshToken");
@@ -88,5 +91,5 @@ export const userSlice = createSlice({
 			}),
 });
 
-export const { setIsLogin } = userSlice.actions;
+export const { setIsLogin, resetError } = userSlice.actions;
 export default userSlice.reducer;

@@ -3,15 +3,19 @@ import LoginForm from "@/containers/auth/LoginForm/LoginForm";
 import ImageSlider from "@/components/auth/ImageSlider/ImageSlider";
 import Footer from "@/components/auth/Footer";
 import RegisterForm from "@/containers/auth/RegisterForm/RegisterForm";
+import { resetError } from "@/slices/user/slice";
+import { useAppDispatch } from "@/utils/hooks/redux";
 
 export default function AuthPage() {
+	const dispatch = useAppDispatch();
 	const [LoginOrRegister, setLoginOrRegister] = useState("login");
 
 	const LoginOrRegisterOnClick = useCallback(
 		(type: string) => () => {
+			dispatch(resetError());
 			setLoginOrRegister(type);
 		},
-		[]
+		[dispatch]
 	);
 
 	return (
