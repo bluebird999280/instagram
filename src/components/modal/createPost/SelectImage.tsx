@@ -22,7 +22,7 @@ function SelectImageComponent({
 			<div className="p-[4px]">
 				<input
 					type="file"
-					accept="image/*"
+					accept=".mp4, .avi, .png, .jpg, .jpeg"
 					multiple
 					ref={fileRef}
 					className="hidden"
