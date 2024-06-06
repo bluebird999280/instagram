@@ -22,7 +22,7 @@ jobs :
       - name : Connect to EC2 and upload docker image
         uses : appleboy/ssh-action@v0.1.6
         with :
-          host : 13.124.70.98
+          host : ${{ secrets.SERVER_ADDRESS }}
           username : ubuntu
           key : ${{ secrets.SERVER_TOKEN }}
           port : 22
