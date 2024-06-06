@@ -67,7 +67,7 @@ function RegisterFormContainer({ loginButtonOnClick }: IRegisterContainer) {
 			rules={rules}
 			inputs={inputs}
 			onSubmit={onSubmit}
-			errorMessage={errors(error)}
+			errorMessage={errors(error.register)}
 			inputOnChange={inputOnChange}
 			loginButtonOnClick={loginButtonOnClick}
 		/>

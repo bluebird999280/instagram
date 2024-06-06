@@ -4,22 +4,27 @@ import { checkThunk, loginThunk, registerThunk } from "./thunk";
 interface IInitialState {
 	isLogin: boolean;
 	loading: boolean;
-	error?: string;
+	error: {
+		login? : string;
+		register? : string;
+		check? : string;
+	};
 }
 
 const initialState: IInitialState = {
 	isLogin: false,
 	loading: false,
-	error: undefined,
+	error: {
+		login : undefined,
+		register : undefined,
+		check : undefined
+	},
 };
 
 export const userSlice = createSlice({
 	name: "user",
 	initialState,
 	reducers: {
-		resetError: (state) => {
-			state.error = undefined;
-		},
 		setIsLogin: (state, action: PayloadAction<boolean>) => {
 			const accessToken = localStorage.getItem("accessToken");
 			const refreshToken = localStorage.getItem("refreshToken");
@@ -37,7 +42,7 @@ export const userSlice = createSlice({
 		builder
 			.addCase(loginThunk.pending, (state) => {
 				state.loading = true;
-				state.error = undefined;
+				state.error.login = undefined;
 			})
 			.addCase(loginThunk.fulfilled, (state, action) => {
 				state.loading = false;
@@ -51,11 +56,11 @@ export const userSlice = createSlice({
 			})
 			.addCase(loginThunk.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload;
+				state.error.login = action.payload;
 			})
 			.addCase(registerThunk.pending, (state) => {
 				state.loading = true;
-				state.error = undefined;
+				state.error.register = undefined;
 			})
 			.addCase(registerThunk.fulfilled, (state, action) => {
 				state.loading = false;
@@ -69,11 +74,11 @@ export const userSlice = createSlice({
 			})
 			.addCase(registerThunk.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload;
+				state.error.register = action.payload;
 			})
 			.addCase(checkThunk.pending, (state) => {
 				state.loading = true;
-				state.error = undefined;
+				state.error.check = undefined;
 			})
 			.addCase(checkThunk.fulfilled, (state, action) => {
 				state.loading = false;
@@ -84,12 +89,12 @@ export const userSlice = createSlice({
 			.addCase(checkThunk.rejected, (state, action) => {
 				state.loading = false;
 				state.isLogin = false;
-				state.error = action.payload;
+				state.error.check = action.payload;
 
 				localStorage.removeItem("accessToken");
 				localStorage.removeItem("refreshToken");
 			}),
 });
 
-export const { setIsLogin, resetError } = userSlice.actions;
+export const { setIsLogin } = userSlice.actions;
 export default userSlice.reducer;

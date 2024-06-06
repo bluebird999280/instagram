@@ -41,7 +41,7 @@ function LoginFormContainer({ registerButtonOnClick }: ILoginFormContainer) {
 		<LoginFormComponent
 			rules={rules}
 			inputs={inputs}
-			errorMessage={errorMessage(error)}
+			errorMessage={errorMessage(error.login)}
 			inputOnChange={inputOnChange}
 			submitOnClick={submitOnClick}
 			registerButtonOnClick={registerButtonOnClick}
